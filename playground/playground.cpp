@@ -7,6 +7,7 @@
 GLFWwindow *window;
 
 #include <glm/glm.hpp>
+#include <common/shader.hpp>
 using namespace glm;
 static void glfw_error_callback(int error, const char* description);
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod);
@@ -47,6 +48,7 @@ int main(void)
 	glfwMakeContextCurrent(window);
 
 	// Initialize GLEW
+	glewExperimental = true; //TODO: no this, segment fault
 	if (glewInit() != GLEW_OK)
 	{
 		fprintf(stderr, "Failed to initialize GLEW\n");
@@ -61,12 +63,45 @@ int main(void)
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
+
+	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+	static const GLfloat g_vertex_buffer_data[] = {
+		-1.0f, -1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f
+	};
+
+	GLuint vertexbuffer;
+	glGenBuffers(1, &vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, 
+		sizeof(g_vertex_buffer_data), 
+		g_vertex_buffer_data, 
+		GL_STATIC_DRAW
+	);
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// Draw nothing, see you in tutorial 2 !
+		glUseProgram(programID);
 
+		// Draw nothing, see you in tutorial 2 !
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glVertexAttribPointer(
+			0,
+			3,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			(void*)0
+		);
+
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDisableVertexAttribArray(0);
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -76,6 +111,9 @@ int main(void)
 		   glfwWindowShouldClose(window) == 0);
 
 	// Close OpenGL window and terminate GLFW
+	glDeleteBuffers(1, &vertexbuffer);
+	glDeleteVertexArrays(1, &VertexArrayID);
+	glDeleteProgram(programID);
 	glfwTerminate();
 
 	return 0;

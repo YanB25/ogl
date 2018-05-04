@@ -6,5 +6,4 @@ playground: playground.cpp
 	cd ../playground/
 
 run:
-	cd ../build/ && ./playground 
-	cd ../playground/
+	./playground
