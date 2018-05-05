@@ -61,7 +61,7 @@ int main(void)
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -69,9 +69,10 @@ int main(void)
 
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 	static const GLfloat g_vertex_buffer_data[] = {
-		-1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f
+		-0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f
 	};
 
 	GLuint vertexbuffer;
@@ -88,20 +89,57 @@ int main(void)
 
 		glUseProgram(programID);
 
+
+		GLuint elements[] = {
+			0, 1, 2,
+			2, 3, 0
+		};
+		GLuint ebo;
+		glGenBuffers(1, &ebo);
+
 		// Draw nothing, see you in tutorial 2 !
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		//    glEnableVertexAttribArray(6);
+		//    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		//    glVertexAttribPointer(
+		//    	6,
+		//    	3,
+		//    	GL_FLOAT,
+		//    	GL_FALSE,
+		//    	0,
+		//    	(void*)0
+		//    );
+		GLint posAttri = glGetAttribLocation(programID, "position");
+		glEnableVertexAttribArray(posAttri);
 		glVertexAttribPointer(
-			0,
+			posAttri,
 			3,
 			GL_FLOAT,
 			GL_FALSE,
-			0,
-			(void*)0
+			6 * sizeof(GLfloat),
+			0
 		);
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		glDisableVertexAttribArray(0);
+		GLint colorAttri = glGetAttribLocation(programID, "color");
+		glEnableVertexAttribArray(colorAttri);
+		glVertexAttribPointer(
+			colorAttri,
+			3,
+			GL_FLOAT,
+			GL_FALSE,
+			6 * sizeof(GLfloat),
+			(void*)(sizeof(GLfloat) * 3)
+		);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
+			sizeof(elements),
+			elements,
+			GL_STATIC_DRAW
+		);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glDisableVertexAttribArray(6);
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
