@@ -8,6 +8,7 @@ GLFWwindow *window;
 
 #include <glm/glm.hpp>
 #include <common/shader.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 static void glfw_error_callback(int error, const char* description);
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod);
@@ -83,6 +84,23 @@ int main(void)
 		g_vertex_buffer_data, 
 		GL_STATIC_DRAW
 	);
+
+	//matrix transformation
+	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) 4 / (float) 3, 0.1f, 100.0f);
+	glm::mat4 View = glm::lookAt(
+		glm::vec3(4, 3, 3),
+		glm::vec3(0, 0, 0),
+		glm::vec3(0, 1, 0)
+	);
+
+	glm::mat4 Model = glm::mat4(1.0f);
+
+	glm::mat4 mvp = Projection * View * Model;
+
+
+
+
+
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -111,6 +129,10 @@ int main(void)
 			(void*)(sizeof(GLfloat) * 3)
 		);
 
+		//TODO: should they be in the loop ? why?
+		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+	
 		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		//glDisableVertexAttribArray(6);
