@@ -15,41 +15,41 @@ static void glfw_error_callback(int error, const char* description);
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod);
 
 static const GLfloat g_vertex_buffer_data[] = {
-    -1.0f,-1.0f,-1.0f, // triangle 1 : begin
-    -1.0f,-1.0f, 1.0f,
-    -1.0f, 1.0f, 1.0f, // triangle 1 : end
+    -1.0f,-1.0f,-0.6f, // triangle 1 : begin
+    -1.0f,-1.0f, 0.6f,
+    -1.0f, 1.0f, 0.6f, // triangle 1 : end
     1.0f, 1.0f,-1.0f, // triangle 2 : begin
-    -1.0f,-1.0f,-1.0f,
-    -1.0f, 1.0f,-1.0f, // triangle 2 : end
+    -1.0f,-1.0f,-0.6f,
+    -1.0f, 1.0f,-0.6f, // triangle 2 : end
+    1.0f,-1.0f, 1.0f, //tr3 : begin
+    -1.0f,-1.0f,-0.6f,
+    1.0f,-1.0f,-1.0f, //tri 3 : end
+    1.0f, 1.0f,-1.0f,
+    1.0f,-1.0f,-1.0f,
+    -1.0f,-1.0f,-0.6f,
+    -1.0f,-1.0f,-0.6f,
+    -1.0f, 1.0f, 0.6f,
+    -1.0f, 1.0f,-0.6f,
     1.0f,-1.0f, 1.0f,
-    -1.0f,-1.0f,-1.0f,
+    -1.0f,-1.0f, 0.6f,
+    -1.0f,-1.0f,-0.6f,
+    -1.0f, 1.0f, 0.6f,
+    -1.0f,-1.0f, 0.6f,
+    1.0f,-1.0f, 1.0f,
+    1.0f, 1.0f, 1.0f,
     1.0f,-1.0f,-1.0f,
     1.0f, 1.0f,-1.0f,
     1.0f,-1.0f,-1.0f,
-    -1.0f,-1.0f,-1.0f,
-    -1.0f,-1.0f,-1.0f,
-    -1.0f, 1.0f, 1.0f,
-    -1.0f, 1.0f,-1.0f,
-    1.0f,-1.0f, 1.0f,
-    -1.0f,-1.0f, 1.0f,
-    -1.0f,-1.0f,-1.0f,
-    -1.0f, 1.0f, 1.0f,
-    -1.0f,-1.0f, 1.0f,
-    1.0f,-1.0f, 1.0f,
-    1.0f, 1.0f, 1.0f,
-    1.0f,-1.0f,-1.0f,
-    1.0f, 1.0f,-1.0f,
-    1.0f,-1.0f,-1.0f,
     1.0f, 1.0f, 1.0f,
     1.0f,-1.0f, 1.0f,
     1.0f, 1.0f, 1.0f,
     1.0f, 1.0f,-1.0f,
-    -1.0f, 1.0f,-1.0f,
+    -1.0f, 1.0f,-0.6f,
     1.0f, 1.0f, 1.0f,
-    -1.0f, 1.0f,-1.0f,
-    -1.0f, 1.0f, 1.0f,
+    -1.0f, 1.0f,-0.6f,
+    -1.0f, 1.0f, 0.6f,
     1.0f, 1.0f, 1.0f,
-    -1.0f, 1.0f, 1.0f,
+    -1.0f, 1.0f, 0.6f,
     1.0f,-1.0f, 1.0f
 };
 
@@ -168,7 +168,7 @@ int main(void)
 	//matrix transformation
 	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) 4 / (float) 3, 0.1f, 100.0f);
 	glm::mat4 View = glm::lookAt(
-		glm::vec3(4, 3, 3),
+		glm::vec3(3, 3, 6),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0)
 	);
