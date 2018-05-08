@@ -7,15 +7,17 @@ GLFW_LINK=`pkg-config --static --libs glfw3`
 OBJ=../common/build/shader.o
 
 SHADER=../common/build/shader.o
-all: cubic
+all: helloworld
 
 run:
-	./cubic
+	./helloworld
 
-cubic.o: cubic.cpp
+helloworld.o: helloworld.cpp
 	g++ -c $^ -I ${ROOT} ${LINK} 
-cubic: cubic.o ../common/build/shader.o
+helloworld: helloworld.o ../common/build/shader.o
 	g++ ${CC_FLAGS} -o $@ $^ -I {ROOT} ${LINK} ${GLFW_LINK}
 ${SHADER}: ../common/shader.cpp
 	cd ../commom/ && make shader.o
 	cd ../cubic/
+clean:
+	rm *.o && rm helloworld
