@@ -236,7 +236,8 @@ int main(void)
 
 	} // Check if the ESC key was pressed or the window was closed
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-		   glfwWindowShouldClose(window) == 0);
+			glfwGetKey(window, GLFW_KEY_Q) != GLFW_PRESS && 
+			glfwWindowShouldClose(window) == 0);
 
 	// Close OpenGL window and terminate GLFW
 	glDeleteBuffers(1, &vertexbuffer);

@@ -1,9 +1,9 @@
 default_target: all
 all: helloworld cubic
-helloworld:
+helloworld: helloworld/helloworld.cpp
 	cd helloworld/ && make
 	cd ../
-cubic:
+cubic: cubic/cubic.cpp
 	cd cubic/ && make 
 	cd ../
 run_helloworld:
