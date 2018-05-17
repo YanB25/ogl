@@ -89,9 +89,11 @@ int main(void)
 
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
+	// init VAO
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 
+	// copy vertex, index and color into VBO 
 	GLuint indexbuffer;
 	glGenBuffers(1, &indexbuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
@@ -119,9 +121,9 @@ int main(void)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
+	// set data format. bind VAO
 	glBindVertexArray(VertexArrayID);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glVertexAttribPointer(
 		0, 
@@ -146,6 +148,8 @@ int main(void)
 	);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
+	// before unbind VAO, bind element buffer.
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
 	glBindVertexArray(0);
 	
 	do
@@ -160,9 +164,7 @@ int main(void)
 		GLint colorLocation = glGetUniformLocation(programID, "oc");
 		glUniform4f(colorLocation, color_value, color_value, color_value, 1.0f);
 
-	
 		glBindVertexArray(VertexArrayID);
-		//glDrawArrays(GL_TRIANGLES, 0, 6); 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 		// Swap buffers
