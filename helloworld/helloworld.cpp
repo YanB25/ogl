@@ -99,12 +99,42 @@ int main(void)
 		g_vertex_buffer_data, 
 		GL_STATIC_DRAW
 	);
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
 	GLuint colorbuffer;
 	glGenBuffers(1, &colorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
+	// move out of the loop
+	GLint posAttri = glGetAttribLocation(programID, "position");
+	glEnableVertexAttribArray(posAttri);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glVertexAttribPointer(
+		posAttri,
+		2,
+		GL_FLOAT,
+		GL_FALSE,
+		2 * sizeof(GLfloat),
+		0
+	);
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
+
+	GLint colorAttri = glGetAttribLocation(programID, "color");
+	glEnableVertexAttribArray(colorAttri);
+	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+	glVertexAttribPointer(
+		colorAttri,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		(void*)0
+	);
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
+
+	glBindVertexArray(0);
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -117,32 +147,11 @@ int main(void)
 		GLint colorLocation = glGetUniformLocation(programID, "oc");
 		glUniform4f(colorLocation, color_value, color_value, color_value, 1.0f);
 
-		GLint posAttri = glGetAttribLocation(programID, "position");
-		glEnableVertexAttribArray(posAttri);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribPointer(
-			posAttri,
-			2,
-			GL_FLOAT,
-			GL_FALSE,
-			2 * sizeof(GLfloat),
-			0
-		);
-
-		GLint colorAttri = glGetAttribLocation(programID, "color");
-		glEnableVertexAttribArray(colorAttri);
-		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-		glVertexAttribPointer(
-			colorAttri,
-			3,
-			GL_FLOAT,
-			GL_FALSE,
-			0,
-			(void*)0
-		);
 	
 		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(VertexArrayID);
 		glDrawArrays(GL_TRIANGLES, 0, 6); 
+		glBindVertexArray(0);
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
