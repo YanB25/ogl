@@ -21,7 +21,12 @@ static const GLfloat g_vertex_buffer_data[] = {
 
 	0.5f, -0.5f,
 	0.5f, 0.5f,
-	-0.5f, -0.5f
+	-0.5f, -0.5f,
+};
+
+static const GLuint g_index_buffer_data[] = {
+	0, 1, 2,
+	3, 1, 2
 };
 
 static const GLfloat g_color_buffer_data[] = {
@@ -85,10 +90,6 @@ int main(void)
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
-
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
 	GLuint vertexbuffer;
@@ -107,6 +108,9 @@ int main(void)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
 	// move out of the loop
 	GLint posAttri = glGetAttribLocation(programID, "position");
 	glEnableVertexAttribArray(posAttri);
@@ -163,6 +167,7 @@ int main(void)
 
 	// Close OpenGL window and terminate GLFW
 	glDeleteBuffers(1, &vertexbuffer);
+	glDeleteBuffers(1, &colorbuffer);
 	glDeleteVertexArrays(1, &VertexArrayID);
 	glDeleteProgram(programID);
 	glfwTerminate();
