@@ -111,6 +111,12 @@ int main(void)
 
 		glUseProgram(programID);
 
+		// set time to change by time
+		float timeValue = glfwGetTime();
+		float color_value = (sin(timeValue) / 2.0) + 0.5;
+		GLint colorLocation = glGetUniformLocation(programID, "oc");
+		glUniform4f(colorLocation, color_value, color_value, color_value, 1.0f);
+
 		GLint posAttri = glGetAttribLocation(programID, "position");
 		glEnableVertexAttribArray(posAttri);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
