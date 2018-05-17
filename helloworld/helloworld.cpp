@@ -91,7 +91,6 @@ int main(void)
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
 
 	GLuint indexbuffer;
 	glGenBuffers(1, &indexbuffer);
@@ -102,8 +101,8 @@ int main(void)
 		g_index_buffer_data,
 		GL_STATIC_DRAW
 	);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); //unbound
 
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); //unbound
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -112,15 +111,16 @@ int main(void)
 	 	g_vertex_buffer_data, 
 	 	GL_STATIC_DRAW
 	);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
 	GLuint colorbuffer;
 	glGenBuffers(1, &colorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
-	// move out of the loop
+	glBindVertexArray(VertexArrayID);
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glVertexAttribPointer(
@@ -132,18 +132,6 @@ int main(void)
 		(void*)(0)
 	);
 	glEnableVertexAttribArray(0);
-
-	// glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	// glEnableVertexAttribArray(0);
-	// glVertexAttribPointer(
-	// 	0,
-	// 	2,
-	// 	GL_FLOAT,
-	// 	GL_FALSE,
-	// 	2 * sizeof(GLfloat),
-	// 	0
-	// );
-	// glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
 	GLint colorAttri = glGetAttribLocation(programID, "color");
 	glEnableVertexAttribArray(colorAttri);
