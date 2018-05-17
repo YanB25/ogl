@@ -18,10 +18,7 @@ static const GLfloat g_vertex_buffer_data[] = {
 	-0.5f, 0.5f,
 	0.5f, 0.5f,
 	-0.5f, -0.5f,
-
 	0.5f, -0.5f,
-	0.5f, 0.5f,
-	-0.5f, -0.5f,
 };
 
 static const GLuint g_index_buffer_data[] = {
@@ -92,38 +89,61 @@ int main(void)
 
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
+
+	GLuint indexbuffer;
+	glGenBuffers(1, &indexbuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
+	glBufferData(
+		GL_ELEMENT_ARRAY_BUFFER,
+		sizeof(g_index_buffer_data),
+		g_index_buffer_data,
+		GL_STATIC_DRAW
+	);
+
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); //unbound
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, 
 		sizeof(g_vertex_buffer_data), 
-		g_vertex_buffer_data, 
-		GL_STATIC_DRAW
+	 	g_vertex_buffer_data, 
+	 	GL_STATIC_DRAW
 	);
-	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
+	//glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
 	GLuint colorbuffer;
 	glGenBuffers(1, &colorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
+	//glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
 	// move out of the loop
-	GLint posAttri = glGetAttribLocation(programID, "position");
-	glEnableVertexAttribArray(posAttri);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glVertexAttribPointer(
-		posAttri,
-		2,
+		0, 
+		2, 
 		GL_FLOAT,
 		GL_FALSE,
-		2 * sizeof(GLfloat),
-		0
+		2 * sizeof(GL_FLOAT),
+		(void*)(0)
 	);
-	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
+	glEnableVertexAttribArray(0);
+
+	// glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	// glEnableVertexAttribArray(0);
+	// glVertexAttribPointer(
+	// 	0,
+	// 	2,
+	// 	GL_FLOAT,
+	// 	GL_FALSE,
+	// 	2 * sizeof(GLfloat),
+	// 	0
+	// );
+	// glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
 	GLint colorAttri = glGetAttribLocation(programID, "color");
 	glEnableVertexAttribArray(colorAttri);
@@ -139,6 +159,7 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
 	glBindVertexArray(0);
+	
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -152,9 +173,9 @@ int main(void)
 		glUniform4f(colorLocation, color_value, color_value, color_value, 1.0f);
 
 	
-		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(VertexArrayID);
-		glDrawArrays(GL_TRIANGLES, 0, 6); 
+		//glDrawArrays(GL_TRIANGLES, 0, 6); 
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -166,7 +187,7 @@ int main(void)
 			glfwWindowShouldClose(window) == 0);
 
 	// Close OpenGL window and terminate GLFW
-	glDeleteBuffers(1, &vertexbuffer);
+	//glDeleteBuffers(1, &vertexbuffer);
 	glDeleteBuffers(1, &colorbuffer);
 	glDeleteVertexArrays(1, &VertexArrayID);
 	glDeleteProgram(programID);
