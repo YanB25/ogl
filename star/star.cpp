@@ -179,7 +179,8 @@ int main(void)
 			glm::vec3(0, 0, 0),
 			glm::vec3(0, 1, 0)
 		);
-		glm::mat4 Model = glm::mat4(1.0f);
+		glm::mat4 Identity = glm::mat4(1.0f);
+		glm::mat4 Model = glm::translate(Identity, glm::vec3(3, 0, 0));
 		glm::mat4 mvp = Projection * View * Model;
 
 		GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
