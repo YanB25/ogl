@@ -8,14 +8,14 @@ OBJ=../common/build/shader.o
 
 SHADER=../common/build/shader.o
 EXEC=star
-all: ${EXEC}
+all: ${EXEC}.out
 
 run:
-	./${EXEC}
+	./${EXEC}.out
 
 ${EXEC}.o: ${EXEC}.cpp include/mymath.hpp include/config.hpp
 	g++ -c $^ -I ${ROOT} ${LINK} 
-${EXEC}: ${EXEC}.o ../common/build/shader.o include/mymath.o
+${EXEC}.out: ${EXEC}.o ../common/build/shader.o include/mymath.o
 	g++ ${CC_FLAGS} -o $@ $^ -I {ROOT} ${LINK} ${GLFW_LINK}
 ${SHADER}: ../common/shader.cpp
 	cd ../commom/ && make shader.o
