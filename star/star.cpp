@@ -90,7 +90,7 @@ int main(void)
 	glfwMakeContextCurrent(window);
 
 	// Initialize GLEW
-	glewExperimental = true; //TODO: no this, segment fault
+	glewExperimental = true; //NOTICE: no this, segment fault
 	if (glewInit() != GLEW_OK)
 	{
 		fprintf(stderr, "Failed to initialize GLEW\n");
@@ -186,20 +186,20 @@ int main(void)
 		glm::mat4 mvp = Projection * View * Model;
 
 		GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
-		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]);
+		// glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]); //TODO: change it when finish
+		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &Identity[0][0]);
+		
 
 
 		glBindVertexArray(VertexArrayID);
 		for (int i = 0; i < NUM_OF_SLICE; ++i) {
 			glDrawArrays(GL_LINE_STRIP, i * (CYCLE_SIDE + 1), CYCLE_SIDE + 1);
 		}
-		//glDrawArrays(GL_LINE_STRIP, 0 , CYCLE_SIDE + 1);
-		//glDrawArrays(GL_LINE_STRIP, CYCLE_SIDE + 1 , CYCLE_SIDE + 1);
-		//glDrawArrays(GL_LINE_STRIP, 2*(CYCLE_SIDE + 1), CYCLE_SIDE + 1);
 		glBindVertexArray(0);
 
 
-		// draw again
+		// draw again //TODO: uncomment me when finish
+		/*
 		GLuint MVP_ID2 = glGetUniformLocation(programID, "MVP");
 		glm::mat4 Model2 = glm::translate(Identity, glm::vec3(-3, 0, 0));
 		glm::mat4 mvp2 = Projection * View * Model2;
@@ -210,6 +210,7 @@ int main(void)
 			glDrawArrays(GL_LINE_STRIP, i * (CYCLE_SIDE + 1), CYCLE_SIDE + 1);
 		}
 		glBindVertexArray(0);
+		*/
 
 
 		// Swap buffers
