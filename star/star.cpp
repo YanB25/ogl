@@ -180,7 +180,9 @@ int main(void)
 			glm::vec3(0, 1, 0)
 		);
 		glm::mat4 Identity = glm::mat4(1.0f);
-		glm::mat4 Model = glm::translate(Identity, glm::vec3(3, 0, 0));
+		glm::mat4 Scale = glm::scale(Identity, glm::vec3(0.5, 0.5, 0.5));
+		glm::mat4 Translation = glm::translate(Identity, glm::vec3(3, 0, 0));
+		glm::mat4 Model = Translation * Scale;
 		glm::mat4 mvp = Projection * View * Model;
 
 		GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
@@ -195,6 +197,21 @@ int main(void)
 		//glDrawArrays(GL_LINE_STRIP, CYCLE_SIDE + 1 , CYCLE_SIDE + 1);
 		//glDrawArrays(GL_LINE_STRIP, 2*(CYCLE_SIDE + 1), CYCLE_SIDE + 1);
 		glBindVertexArray(0);
+
+
+		// draw again
+		GLuint MVP_ID2 = glGetUniformLocation(programID, "MVP");
+		glm::mat4 Model2 = glm::translate(Identity, glm::vec3(-3, 0, 0));
+		glm::mat4 mvp2 = Projection * View * Model2;
+		glUniformMatrix4fv(MVP_ID2, 1, GL_FALSE, &mvp2[0][0]);
+
+		glBindVertexArray(VertexArrayID);
+		for (int i = 0; i < NUM_OF_SLICE; ++i) {
+			glDrawArrays(GL_LINE_STRIP, i * (CYCLE_SIDE + 1), CYCLE_SIDE + 1);
+		}
+		glBindVertexArray(0);
+
+
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();

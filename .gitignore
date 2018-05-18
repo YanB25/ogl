@@ -42,5 +42,5 @@ OpenGL-tutorial_v*
 
 # Executables
 *.exe
-*.out
+/**/*.out
 *.app
