@@ -18,23 +18,10 @@ static void glfw_error_callback(int error, const char* description);
 
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod);
 
-static GLfloat g_vertex_buffer_data[NUM_OF_SLICE][(CYCLE_SIDE+1) * 3]= {
+static GLfloat g_vertex_buffer_data[NUM_OF_SLICE + NUM_OF_MERIDIAN][(CYCLE_SIDE+1) * 3]= {
 	// not init here
 };
-const int vertex_buffer_size = NUM_OF_SLICE * (CYCLE_SIDE + 1) * 3 * sizeof(GLfloat);
-// void init_points() {
-// 	int lim = LINE_PER_CYCLE-1;
-// 	int step = 360 / lim;
-// 	for (int i = 0; i < lim; ++i) {
-// 		int degree = step * i;
-// 		double x = cos(degree * PI / 180);
-// 		double y = sin(degree * PI / 180);
-// 		g_vertex_buffer_data[2*i] = x;
-// 		g_vertex_buffer_data[2*i + 1] = y;
-// 	}
-// 	g_vertex_buffer_data[2*lim] = cos(0);
-// 	g_vertex_buffer_data[2*lim + 1] = sin(0);
-// }
+const int vertex_buffer_size = (NUM_OF_SLICE + NUM_OF_MERIDIAN) * (CYCLE_SIDE + 1) * 3 * sizeof(GLfloat);
 
 static const GLfloat g_color_buffer_data[] = {
 	1.0f, 1.0f, 1.0f,
@@ -54,6 +41,12 @@ int main(void)
 		double z = -0.98 + step * i;
 		printf("z is %lf\n", z);
 		fill_cycle(z, g_vertex_buffer_data[i]);
+	}
+	for (int i = 0; i < NUM_OF_MERIDIAN; ++i) {
+		double step = 360.0 / NUM_OF_MERIDIAN;
+		double theta = i * step;
+		printf("theta is %lf\n", theta);
+		fill_meridian(theta, g_vertex_buffer_data[i + NUM_OF_SLICE]);
 	}
 	// Initialise GLFW
 	if (!glfwInit())
@@ -186,31 +179,26 @@ int main(void)
 		glm::mat4 mvp = Projection * View * Model;
 
 		GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
-		// glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]); //TODO: change it when finish
-		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &Identity[0][0]);
-		
-
+		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]); //TODO: change it when finish
 
 		glBindVertexArray(VertexArrayID);
-		for (int i = 0; i < NUM_OF_SLICE; ++i) {
+		for (int i = 0; i < NUM_OF_SLICE + NUM_OF_MERIDIAN; ++i) {
 			glDrawArrays(GL_LINE_STRIP, i * (CYCLE_SIDE + 1), CYCLE_SIDE + 1);
 		}
 		glBindVertexArray(0);
 
 
-		// draw again //TODO: uncomment me when finish
-		/*
+		// draw different ball
 		GLuint MVP_ID2 = glGetUniformLocation(programID, "MVP");
 		glm::mat4 Model2 = glm::translate(Identity, glm::vec3(-3, 0, 0));
 		glm::mat4 mvp2 = Projection * View * Model2;
 		glUniformMatrix4fv(MVP_ID2, 1, GL_FALSE, &mvp2[0][0]);
 
 		glBindVertexArray(VertexArrayID);
-		for (int i = 0; i < NUM_OF_SLICE; ++i) {
+		for (int i = 0; i < NUM_OF_SLICE + NUM_OF_MERIDIAN; ++i) {
 			glDrawArrays(GL_LINE_STRIP, i * (CYCLE_SIDE + 1), CYCLE_SIDE + 1);
 		}
 		glBindVertexArray(0);
-		*/
 
 
 		// Swap buffers
