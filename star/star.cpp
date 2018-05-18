@@ -14,6 +14,8 @@ GLFWwindow *window;
 #include "include/mymath.hpp"
 #include "include/config.hpp"
 using namespace glm;
+double spin_rotate = 0;
+double revolution_rotate = 0;
 static void glfw_error_callback(int error, const char* description);
 
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod);
@@ -161,7 +163,7 @@ int main(void)
 
 		// set time to change by time
 		float timeValue = glfwGetTime();
-		float color_value = (sin(timeValue) / 2.0) + 0.5;
+		float color_value = (sin(timeValue) / 3.0) + 0.5;
 		GLint colorLocation = glGetUniformLocation(programID, "oc");
 		glUniform4f(colorLocation, color_value, color_value, color_value, 1.0f);
 
@@ -173,9 +175,11 @@ int main(void)
 			glm::vec3(0, 1, 0)
 		);
 		glm::mat4 Identity = glm::mat4(1.0f);
+		glm::mat4 Rotate = glm::rotate(Identity, float(spin_rotate), glm::vec3(0, 1, 0));
 		glm::mat4 Scale = glm::scale(Identity, glm::vec3(0.5, 0.5, 0.5));
 		glm::mat4 Translation = glm::translate(Identity, glm::vec3(3, 0, 0));
-		glm::mat4 Model = Translation * Scale;
+		glm::mat4 Revolution = glm::rotate(Identity, float(revolution_rotate), glm::vec3(0, 1, 0));
+		glm::mat4 Model = Revolution * Translation * Scale * Rotate;
 		glm::mat4 mvp = Projection * View * Model;
 
 		GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
@@ -190,7 +194,8 @@ int main(void)
 
 		// draw different ball
 		GLuint MVP_ID2 = glGetUniformLocation(programID, "MVP");
-		glm::mat4 Model2 = glm::translate(Identity, glm::vec3(-3, 0, 0));
+		//glm::mat4 Model2 = glm::translate(Identity, glm::vec3(-3, 0, 0));
+		glm::mat4 Model2 = glm::mat4(1.0);
 		glm::mat4 mvp2 = Projection * View * Model2;
 		glUniformMatrix4fv(MVP_ID2, 1, GL_FALSE, &mvp2[0][0]);
 
@@ -226,6 +231,28 @@ static void glfw_error_callback(int error, const char* description) {
 }
 
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod) {
-	// printf("key callback, key %d, scancode %d, action %d, mod %d \n", key, scanCode, action, mod);
-	printf("key pressed\n");
+	printf("key callback, key %d, scancode %d, action %d, mod %d \n", key, scanCode, action, mod);
+	if (key == 68 && scanCode == 40 && (action == 1 || action == 2)) {
+		if (mod == 0) {
+			//press d
+			spin_rotate = (spin_rotate + 0.1);
+			while (spin_rotate > 360) spin_rotate -= 360;
+		} 
+		if (mod == 1) {
+			// sft + d
+			spin_rotate = (spin_rotate - 0.1);
+			while (spin_rotate < 0) spin_rotate += 360;
+		}
+	}
+	if (key == 89 && scanCode == 29 && (action == 1 || action == 2)) {
+		if (mod == 0) {
+			revolution_rotate = revolution_rotate + 0.1;
+			while (revolution_rotate > 360) revolution_rotate -= 360;
+		}
+		if (mod == 1) {
+			revolution_rotate = revolution_rotate - 0.1;
+			while (revolution_rotate > 360) revolution_rotate += 360;
+		}
+	}
+	//printf("key pressed\n");
 }
