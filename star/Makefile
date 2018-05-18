@@ -20,8 +20,9 @@ ${EXEC}: ${EXEC}.o ../common/build/shader.o include/mymath.o
 ${SHADER}: ../common/shader.cpp
 	cd ../commom/ && make shader.o
 	cd ../learning/
-include/mymath.o: include/mymath.cpp include/config.hpp
+include/mymath.o: include/mymath.cpp include/config.hpp include/mymath.hpp
 	cd include/ && make mymath.o
 	cd ../
 clean:
-	rm *.o && rm ${EXEC}
+	find . -type f -name "*.o" -delete
+	find . -type f -name "*.gch" -delete

@@ -76,7 +76,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(700, 700, "helloworld", NULL, NULL);
+	window = glfwCreateWindow(1600, 900, "star", NULL, NULL);
 	if (window == NULL)
 	{
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
@@ -107,6 +107,7 @@ int main(void)
 
 	//GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader", "GeometryShader.glsl");
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+
 
 	// init VAO
 	GLuint VertexArrayID;
@@ -171,13 +172,27 @@ int main(void)
 		GLint colorLocation = glGetUniformLocation(programID, "oc");
 		glUniform4f(colorLocation, color_value, color_value, color_value, 1.0f);
 
+		// calculate mvp
+		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), float(16)/9, 0.1f, 100.0f);
+		glm::mat4 View = glm::lookAt(
+			glm::vec3(0, 0, 8),
+			glm::vec3(0, 0, 0),
+			glm::vec3(0, 1, 0)
+		);
+		glm::mat4 Model = glm::mat4(1.0f);
+		glm::mat4 mvp = Projection * View * Model;
+
+		GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
+		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]);
+
+
 		glBindVertexArray(VertexArrayID);
 		for (int i = 0; i < NUM_OF_SLICE; ++i) {
 			glDrawArrays(GL_LINE_STRIP, i * (CYCLE_SIDE + 1), CYCLE_SIDE + 1);
 		}
-		glDrawArrays(GL_LINE_STRIP, 0 , CYCLE_SIDE + 1);
-		glDrawArrays(GL_LINE_STRIP, CYCLE_SIDE + 1 , CYCLE_SIDE + 1);
-		glDrawArrays(GL_LINE_STRIP, 2*(CYCLE_SIDE + 1), CYCLE_SIDE + 1);
+		//glDrawArrays(GL_LINE_STRIP, 0 , CYCLE_SIDE + 1);
+		//glDrawArrays(GL_LINE_STRIP, CYCLE_SIDE + 1 , CYCLE_SIDE + 1);
+		//glDrawArrays(GL_LINE_STRIP, 2*(CYCLE_SIDE + 1), CYCLE_SIDE + 1);
 		glBindVertexArray(0);
 		// Swap buffers
 		glfwSwapBuffers(window);
