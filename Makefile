@@ -1,14 +1,13 @@
 default_target: all
-all: helloworld cubic
-helloworld: helloworld/helloworld.cpp
-	cd helloworld/ && make
+all: star/star.out
+HEADERS = star/include/mymath.hpp common/shader.hpp
+star/star.out: star/star.cpp ${HEADERS}
+	cd star/ && make star.out
 	cd ../
-cubic: cubic/cubic.cpp
-	cd cubic/ && make 
+run:
+	cd star/ && ./star.out
 	cd ../
-run_helloworld:
-	cd helloworld/ && make run
-	cd ../
-run_cubic:
-	cd cubic/ && make run
-	cd ../
+clean:
+	find . -type f -name "*.o" -delete
+	find . -type f -name "*.out" -delete
+	find . -type f -name "*.gch" -delete
