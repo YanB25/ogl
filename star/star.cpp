@@ -4,27 +4,34 @@
 #include <GL/glew.h>
 
 #include <GLFW/glfw3.h>
+#include <cmath>
 GLFWwindow *window;
 
 #include <glm/glm.hpp>
 #include <common/shader.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "include/mymath.hpp"
+#include "include/config.hpp"
 using namespace glm;
+double spin_rotate = 0;
+double revolution_rotate = 0;
+bool run_flag = false;
 static void glfw_error_callback(int error, const char* description);
 
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod);
 
-static const GLfloat g_vertex_buffer_data[] = {
-	-0.5f, 0.5f,
-	0.5f, 0.5f,
-	-0.5f, -0.5f,
-	0.5f, -0.5f,
-};
+double wrapback_add(double, double);
+double wrapback_sub(double, double);
+void star_spin();
+void star_spin_r();
+void revolution();
+void revolution_r();
 
-static const GLuint g_index_buffer_data[] = {
-	0, 1, 2,
-	3, 1, 2
+static GLfloat g_vertex_buffer_data[NUM_OF_SLICE + NUM_OF_MERIDIAN][(CYCLE_SIDE+1) * 3]= {
+	// not init here
 };
+const int vertex_buffer_size = (NUM_OF_SLICE + NUM_OF_MERIDIAN) * (CYCLE_SIDE + 1) * 3 * sizeof(GLfloat);
 
 static const GLfloat g_color_buffer_data[] = {
 	1.0f, 1.0f, 1.0f,
@@ -37,6 +44,20 @@ static const GLfloat g_color_buffer_data[] = {
 
 int main(void)
 {
+	for (int i = 0; i < NUM_OF_SLICE; ++i) {
+		// magic number:
+		// devide z into [-0.98, 0.98], width is 1.96, starting point is -0.98
+		double step = 1.96 / (NUM_OF_SLICE-1);
+		double z = -0.98 + step * i;
+		printf("z is %lf\n", z);
+		fill_cycle(z, g_vertex_buffer_data[i]);
+	}
+	for (int i = 0; i < NUM_OF_MERIDIAN; ++i) {
+		double step = 180.0 / NUM_OF_MERIDIAN;
+		double theta = i * step;
+		printf("theta is %lf\n", theta);
+		fill_meridian(TORAID(theta), g_vertex_buffer_data[i + NUM_OF_SLICE]);
+	}
 	// Initialise GLFW
 	if (!glfwInit())
 	{
@@ -58,7 +79,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(700, 700, "helloworld", NULL, NULL);
+	window = glfwCreateWindow(1600, 900, "star", NULL, NULL);
 	if (window == NULL)
 	{
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
@@ -72,7 +93,7 @@ int main(void)
 	glfwMakeContextCurrent(window);
 
 	// Initialize GLEW
-	glewExperimental = true; //TODO: no this, segment fault
+	glewExperimental = true; //NOTICE: no this, segment fault
 	if (glewInit() != GLEW_OK)
 	{
 		fprintf(stderr, "Failed to initialize GLEW\n");
@@ -87,29 +108,21 @@ int main(void)
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
+	//GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader", "GeometryShader.glsl");
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+
 
 	// init VAO
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 
 	// copy vertex, index and color into VBO 
-	GLuint indexbuffer;
-	glGenBuffers(1, &indexbuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
-	glBufferData(
-		GL_ELEMENT_ARRAY_BUFFER,
-		sizeof(g_index_buffer_data),
-		g_index_buffer_data,
-		GL_STATIC_DRAW
-	);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); //unbound
 
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, 
-		sizeof(g_vertex_buffer_data), 
+		vertex_buffer_size, //NOTICE: mannually calculate size
 	 	g_vertex_buffer_data, 
 	 	GL_STATIC_DRAW
 	);
@@ -127,19 +140,18 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glVertexAttribPointer(
 		0, 
-		2, 
+		3, 
 		GL_FLOAT,
 		GL_FALSE,
-		2 * sizeof(GL_FLOAT),
+		3 * sizeof(GL_FLOAT),
 		(void*)(0)
 	);
 	glEnableVertexAttribArray(0);
 
-	GLint colorAttri = glGetAttribLocation(programID, "color");
-	glEnableVertexAttribArray(colorAttri);
+	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	glVertexAttribPointer(
-		colorAttri,
+		1,
 		3,
 		GL_FLOAT,
 		GL_FALSE,
@@ -149,24 +161,62 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // unbound
 
 	// before unbind VAO, bind element buffer.
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
 	glBindVertexArray(0);
 	
 	do
 	{
+		if (run_flag) {
+			star_spin();
+			revolution();
+		}
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(programID);
 
 		// set time to change by time
 		float timeValue = glfwGetTime();
-		float color_value = (sin(timeValue) / 2.0) + 0.5;
+		float color_value = (sin(timeValue) / 3.0) + 0.5;
 		GLint colorLocation = glGetUniformLocation(programID, "oc");
 		glUniform4f(colorLocation, color_value, color_value, color_value, 1.0f);
 
+		// calculate mvp
+		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), float(16)/9, 0.1f, 100.0f);
+		glm::mat4 View = glm::lookAt(
+			glm::vec3(0, 0, 8),
+			glm::vec3(0, 0, 0),
+			glm::vec3(0, 1, 0)
+		);
+		glm::mat4 Identity = glm::mat4(1.0f);
+		glm::mat4 Rotate = glm::rotate(Identity, float(spin_rotate), glm::vec3(0, 1, 0));
+		glm::mat4 Scale = glm::scale(Identity, glm::vec3(0.5, 0.5, 0.5));
+		glm::mat4 Translation = glm::translate(Identity, glm::vec3(3, 0, 0));
+		glm::mat4 Revolution = glm::rotate(Identity, float(revolution_rotate), glm::vec3(0, 1, 0));
+		glm::mat4 Model = Revolution * Translation * Scale * Rotate;
+		glm::mat4 mvp = Projection * View * Model;
+
+		GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
+		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]);
+
 		glBindVertexArray(VertexArrayID);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		for (int i = 0; i < NUM_OF_SLICE + NUM_OF_MERIDIAN; ++i) {
+			glDrawArrays(GL_LINE_STRIP, i * (CYCLE_SIDE + 1), CYCLE_SIDE + 1);
+		}
 		glBindVertexArray(0);
+
+
+		// draw different ball
+		GLuint MVP_ID2 = glGetUniformLocation(programID, "MVP");
+		glm::mat4 Model2 = glm::mat4(1.0);
+		glm::mat4 mvp2 = Projection * View * Model2;
+		glUniformMatrix4fv(MVP_ID2, 1, GL_FALSE, &mvp2[0][0]);
+
+		glBindVertexArray(VertexArrayID);
+		for (int i = 0; i < NUM_OF_SLICE + NUM_OF_MERIDIAN; ++i) {
+			glDrawArrays(GL_LINE_STRIP, i * (CYCLE_SIDE + 1), CYCLE_SIDE + 1);
+		}
+		glBindVertexArray(0);
+
+
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -191,7 +241,56 @@ static void glfw_error_callback(int error, const char* description) {
 	fprintf(stderr, "Error in glfw, code is: %d\n", error);
 }
 
+void star_spin() {
+	spin_rotate = wrapback_add(spin_rotate, R_SPEED);
+}
+void star_spin_r() {
+	spin_rotate = wrapback_sub(spin_rotate, R_SPEED);
+}
+void revolution() {
+	revolution_rotate = wrapback_add(revolution_rotate, R_SPEED);
+}
+void revolution_r() {
+	revolution_rotate = wrapback_add(revolution_rotate, R_SPEED);
+}
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod) {
-	// printf("key callback, key %d, scancode %d, action %d, mod %d \n", key, scanCode, action, mod);
-	printf("key pressed\n");
+	printf("key callback, key %d, scancode %d, action %d, mod %d \n", key, scanCode, action, mod);
+	if (key == 68 && scanCode == 40 && (action == 1 || action == 2)) {
+		if (mod == 0) {
+			//press d
+			star_spin();
+		} 
+		if (mod == 1) {
+			// sft + d
+			star_spin_r();
+		}
+	}
+	if (key == 89 && scanCode == 29 && (action == 1 || action == 2)) {
+		if (mod == 0) {
+			revolution();
+		}
+		if (mod == 1) {
+			revolution_r();
+		}
+	}
+	if (key == 82 && scanCode == 27 && action == 1) {
+		if (mod == 0) {
+			run_flag = true;
+		}
+		if (mod == 1) {
+			run_flag = false;
+		}
+	}
+	//printf("key pressed\n");
+}
+
+double wrapback_add(double init, double delta) {
+	double ret = init + delta;
+	while (ret > 360) ret -= 360;
+	return ret;
+}
+double wrapback_sub(double init, double delta) {
+	double ret = init - delta;
+	while (ret > 360) ret += 360;
+	return ret;
 }
