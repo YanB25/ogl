@@ -16,9 +16,17 @@ GLFWwindow *window;
 using namespace glm;
 double spin_rotate = 0;
 double revolution_rotate = 0;
+bool run_flag = false;
 static void glfw_error_callback(int error, const char* description);
 
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod);
+
+double wrapback_add(double, double);
+double wrapback_sub(double, double);
+void star_spin();
+void star_spin_r();
+void revolution();
+void revolution_r();
 
 static GLfloat g_vertex_buffer_data[NUM_OF_SLICE + NUM_OF_MERIDIAN][(CYCLE_SIDE+1) * 3]= {
 	// not init here
@@ -157,6 +165,10 @@ int main(void)
 	
 	do
 	{
+		if (run_flag) {
+			star_spin();
+			revolution();
+		}
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(programID);
@@ -183,19 +195,17 @@ int main(void)
 		glm::mat4 mvp = Projection * View * Model;
 
 		GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
-		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]); //TODO: change it when finish
+		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]);
 
 		glBindVertexArray(VertexArrayID);
 		for (int i = 0; i < NUM_OF_SLICE + NUM_OF_MERIDIAN; ++i) {
 			glDrawArrays(GL_LINE_STRIP, i * (CYCLE_SIDE + 1), CYCLE_SIDE + 1);
-			//printf("draw %d\n", i);
 		}
 		glBindVertexArray(0);
 
 
 		// draw different ball
 		GLuint MVP_ID2 = glGetUniformLocation(programID, "MVP");
-		//glm::mat4 Model2 = glm::translate(Identity, glm::vec3(-3, 0, 0));
 		glm::mat4 Model2 = glm::mat4(1.0);
 		glm::mat4 mvp2 = Projection * View * Model2;
 		glUniformMatrix4fv(MVP_ID2, 1, GL_FALSE, &mvp2[0][0]);
@@ -231,29 +241,56 @@ static void glfw_error_callback(int error, const char* description) {
 	fprintf(stderr, "Error in glfw, code is: %d\n", error);
 }
 
+void star_spin() {
+	spin_rotate = wrapback_add(spin_rotate, R_SPEED);
+}
+void star_spin_r() {
+	spin_rotate = wrapback_sub(spin_rotate, R_SPEED);
+}
+void revolution() {
+	revolution_rotate = wrapback_add(revolution_rotate, R_SPEED);
+}
+void revolution_r() {
+	revolution_rotate = wrapback_add(revolution_rotate, R_SPEED);
+}
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod) {
 	printf("key callback, key %d, scancode %d, action %d, mod %d \n", key, scanCode, action, mod);
 	if (key == 68 && scanCode == 40 && (action == 1 || action == 2)) {
 		if (mod == 0) {
 			//press d
-			spin_rotate = (spin_rotate + 0.1);
-			while (spin_rotate > 360) spin_rotate -= 360;
+			star_spin();
 		} 
 		if (mod == 1) {
 			// sft + d
-			spin_rotate = (spin_rotate - 0.1);
-			while (spin_rotate < 0) spin_rotate += 360;
+			star_spin_r();
 		}
 	}
 	if (key == 89 && scanCode == 29 && (action == 1 || action == 2)) {
 		if (mod == 0) {
-			revolution_rotate = revolution_rotate + 0.1;
-			while (revolution_rotate > 360) revolution_rotate -= 360;
+			revolution();
 		}
 		if (mod == 1) {
-			revolution_rotate = revolution_rotate - 0.1;
-			while (revolution_rotate > 360) revolution_rotate += 360;
+			revolution_r();
+		}
+	}
+	if (key == 82 && scanCode == 27 && action == 1) {
+		if (mod == 0) {
+			run_flag = true;
+		}
+		if (mod == 1) {
+			run_flag = false;
 		}
 	}
 	//printf("key pressed\n");
+}
+
+double wrapback_add(double init, double delta) {
+	double ret = init + delta;
+	while (ret > 360) ret -= 360;
+	return ret;
+}
+double wrapback_sub(double init, double delta) {
+	double ret = init - delta;
+	while (ret > 360) ret += 360;
+	return ret;
 }

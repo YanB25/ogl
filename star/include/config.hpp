@@ -6,5 +6,6 @@
 #define NUM_OF_MERIDIAN 8
 #define PI 3.1415926
 #define TO_RAD(X) (X * PI / 180.0f)
+#define R_SPEED (0.2f)
 
 #endif
