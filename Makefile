@@ -1,6 +1,6 @@
 default_target: all
 all: star/star.out
-HEADERS = star/include/mymath.hpp common/shader.hpp
+HEADERS = star/include/mymath.hpp common/shader.hpp star/include/config.hpp
 star/star.out: star/star.cpp ${HEADERS}
 	cd star/ && make star.out
 	cd ../

@@ -79,7 +79,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(1600, 900, "star", NULL, NULL);
+	window = glfwCreateWindow(1600 / 2, 900 / 2, "star", NULL, NULL);
 	if (window == NULL)
 	{
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
@@ -251,7 +251,7 @@ void revolution() {
 	revolution_rotate = wrapback_add(revolution_rotate, R_SPEED);
 }
 void revolution_r() {
-	revolution_rotate = wrapback_add(revolution_rotate, R_SPEED);
+	revolution_rotate = wrapback_sub(revolution_rotate, R_SPEED);
 }
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod) {
 	printf("key callback, key %d, scancode %d, action %d, mod %d \n", key, scanCode, action, mod);
