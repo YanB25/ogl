@@ -45,10 +45,10 @@ int main(void)
 		fill_cycle(z, g_vertex_buffer_data[i]);
 	}
 	for (int i = 0; i < NUM_OF_MERIDIAN; ++i) {
-		double step = 360.0 / NUM_OF_MERIDIAN;
+		double step = 180.0 / NUM_OF_MERIDIAN;
 		double theta = i * step;
 		printf("theta is %lf\n", theta);
-		fill_meridian(theta, g_vertex_buffer_data[i + NUM_OF_SLICE]);
+		fill_meridian(TORAID(theta), g_vertex_buffer_data[i + NUM_OF_SLICE]);
 	}
 	// Initialise GLFW
 	if (!glfwInit())
@@ -188,6 +188,7 @@ int main(void)
 		glBindVertexArray(VertexArrayID);
 		for (int i = 0; i < NUM_OF_SLICE + NUM_OF_MERIDIAN; ++i) {
 			glDrawArrays(GL_LINE_STRIP, i * (CYCLE_SIDE + 1), CYCLE_SIDE + 1);
+			//printf("draw %d\n", i);
 		}
 		glBindVertexArray(0);
 

@@ -3,7 +3,7 @@
 #include "config.hpp"
 using namespace std;
 #define EPSILON (1e-8)
-#define TORAID(X) (X * PI / 180.0f)
+inline double TORAID(double degree) { return degree * PI / 180; }
 void fill_cycle(double z, float* buff) {
     if (z < -1 || z > 1)
         cerr << "error in z, it is " << z << endl;
@@ -24,8 +24,8 @@ void fill_cycle(double z, float* buff) {
 
 void fill_meridian(double theta, float* buff) {
     double step = 360.0 / CYCLE_SIDE;
-    for (int i = 0; i < NUM_OF_MERIDIAN; ++i) {
-        double fi = step * i;
+    for (int i = 0; i < CYCLE_SIDE; ++i) {
+        double fi = TORAID(step * i);
         double theta_prime = theta;
         if (fi <= 180 + EPSILON) {
             theta_prime += PI;
