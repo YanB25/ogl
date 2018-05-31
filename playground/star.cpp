@@ -13,12 +13,13 @@ GLFWwindow *window;
 
 #include "include/config.hpp"
 using namespace glm;
-double spin_rotate = 0;
-double revolution_rotate = 0;
-bool run_flag = false;
+double cursor_x = 0;
+double cursor_y = 0;
+int nth_point = 0;
 static void glfw_error_callback(int error, const char* description);
-
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod);
+static void cursor_position_callback(GLFWwindow* windowk, double x, double y);
+static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 static GLfloat g_vertex_buffer_data[(GRAN+1)*2]= {
 	// not init here
@@ -26,10 +27,10 @@ static GLfloat g_vertex_buffer_data[(GRAN+1)*2]= {
 
 static GLfloat g_vertex_controll_point_buffer_data[4 * 2] = {
 	// not init here
-	-1.0f, -1.0f,
-	1.0f, -1.0f,
-	0.0f, -1.0f,
-	0.0f, 1.0f
+	-0.4f, -0.6f,
+	0.8f, -0.3f,
+	0.0f, -0.7f,
+	0.0f, 0.2f
 };
 static const GLfloat g_color_buffer_data[] = {
 	1.0f, 1.0f, 1.0f,
@@ -62,7 +63,7 @@ void INIT_BESEL() {
 		glm::vec2 output = t0 + t1 + t2 + t3;
 		g_vertex_buffer_data[i*2] = output[0];
 		g_vertex_buffer_data[i*2 + 1] = output[1];
-		printf("(%f, %f at %f\n", output[0], output[1], t);
+		//printf("(%f, %f at %f\n", output[0], output[1], t);
 	}
 }
 int main(void)
@@ -89,7 +90,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(1600 / 2, 900 / 2, "xx", NULL, NULL);
+	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "xx", NULL, NULL);
 	if (window == NULL)
 	{
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
@@ -99,6 +100,8 @@ int main(void)
 	}
 	// set key callback that do nothing
 	glfwSetKeyCallback(window, key_call_back);
+	glfwSetCursorPosCallback(window, cursor_position_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 
 	glfwMakeContextCurrent(window);
 
@@ -174,6 +177,54 @@ int main(void)
 
 	// before unbind VAO, bind element buffer.
 	glBindVertexArray(0);
+
+	//NOTICE: for controller
+	GLuint controller_VAO_ID;
+	glGenVertexArrays(1, &controller_VAO_ID);
+	glBindVertexArray(controller_VAO_ID);
+
+	// for vertex
+	GLuint controller_vertex_buffer;
+	glGenBuffers(1, &controller_vertex_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, controller_vertex_buffer);
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		sizeof(g_vertex_controll_point_buffer_data),
+		g_vertex_controll_point_buffer_data,
+		GL_STATIC_DRAW
+	);
+	glVertexAttribPointer(
+		0,
+		2,
+		GL_FLOAT,
+		GL_FALSE,
+		2*sizeof(GL_FLOAT),
+		(void*) 0
+	);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	GLuint controller_color_buffer;
+	glGenBuffers(1, &controller_color_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, controller_color_buffer);
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		sizeof(g_color_buffer_data),
+		g_color_buffer_data,
+		GL_STATIC_DRAW
+	);
+	glVertexAttribPointer(
+		1,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		(void*)0
+	);
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_VERTEX_ARRAY, 0);
+
+	glBindVertexArray(0);
 	
 	do
 	{
@@ -209,6 +260,10 @@ int main(void)
 		glDrawArrays(GL_LINE_STRIP, 0, GRAN+1);
 		glBindVertexArray(0);
 
+		glBindVertexArray(controller_VAO_ID);
+		glDrawArrays(GL_LINE_STRIP, 0, 4);
+		glBindVertexArray(0);
+
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -236,4 +291,17 @@ static void glfw_error_callback(int error, const char* description) {
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod) {
 	printf("key callback, key %d, scancode %d, action %d, mod %d \n", key, scanCode, action, mod);
 	//printf("key pressed\n");
+}
+static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+	cursor_x = xpos / (WINDOW_WIDTH/2) - 1;
+	cursor_y = -(ypos / (WINDOW_HEIGHT/2) - 1);
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
+	printf("mouse button change button %d, action %d, mods %d\n", button ,action, mods);
+	printf("position is (%lf, %lf)\n", cursor_x, cursor_y);
+	g_vertex_controll_point_buffer_data[2*nth_point] = cursor_x;
+	g_vertex_controll_point_buffer_data[2*nth_point + 1] = cursor_y;
+	nth_point = (nth_point+1) % 4;
+	INIT_BESEL();
 }
