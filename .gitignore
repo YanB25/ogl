@@ -19,7 +19,6 @@ OpenGL-tutorial_v*
 *.slo
 *.lo
 /**/*.o
-*.obj
 
 # Precompiled Headers
 /**/*.gch

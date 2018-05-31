@@ -1,0 +1,13 @@
+#version 330 core
+
+in vec3 Color;
+// Ouput data
+out vec4 out_color;
+uniform vec4 oc;
+void main()
+{
+
+	// Output color = red 
+	//out_color = vec4(Color, 1.0);
+	out_color = oc;
+}
