@@ -12,6 +12,7 @@ GLFWwindow *window;
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "include/config.hpp"
+#include "include/controllPoint.h"
 using namespace glm;
 double cursor_x = 0;
 double cursor_y = 0;
@@ -21,17 +22,10 @@ static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action
 static void cursor_position_callback(GLFWwindow* windowk, double x, double y);
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
-static GLfloat g_vertex_buffer_data[(GRAN+1)*2]= {
+//static GLfloat g_vertex_buffer_data[(GRAN+1)*2]= {
 	// not init here
-};
+//};
 
-static GLfloat g_vertex_controll_point_buffer_data[4 * 2] = {
-	// not init here
-	-0.0f, -0.0f,
-	0.0f, -0.0f,
-	0.0f, -0.0f,
-	0.0f, 0.0f
-};
 static const GLfloat g_color_buffer_data[] = {
 	1.0f, 1.0f, 1.0f,
 	1.0f, 1.0f, 1.0f,
@@ -40,38 +34,167 @@ static const GLfloat g_color_buffer_data[] = {
 	1.0f, 1.0f, 1.0f,
 	1.0f, 1.0f, 1.0f
 };
+// NOTICE: important init
+
 void INIT_BESEL() {
-	float x = g_vertex_controll_point_buffer_data[0];
-	float y = g_vertex_controll_point_buffer_data[1];
-	glm::vec2 P0 = glm::vec2(x, y);
-	x = g_vertex_controll_point_buffer_data[2];
-	y = g_vertex_controll_point_buffer_data[3];
-	glm::vec2 P1 = glm::vec2(x, y);
-	x = g_vertex_controll_point_buffer_data[4];
-	y = g_vertex_controll_point_buffer_data[5];
-	glm::vec2 P2 = glm::vec2(x, y);
-	x = g_vertex_controll_point_buffer_data[6];
-	y = g_vertex_controll_point_buffer_data[7];
-	glm::vec2 P3 = glm::vec2(x, y);
-	float step = 1.0f / GRAN;
-	for (int i = 0; i <= GRAN; ++i) {
-		float t = step * i;
-		glm::vec2 t0 = P0 * float(pow((1-t), 3));
-		glm::vec2 t1 = P1 * float(pow((1-t), 2) * t);
-		glm::vec2 t2 = P2 * float((1-t) * pow((t), 2));
-		glm::vec2 t3 = P3 * float(pow(t, 3));
-		glm::vec2 output = t0 + t1 + t2 + t3;
-		g_vertex_buffer_data[i*2] = output[0];
-		g_vertex_buffer_data[i*2 + 1] = output[1];
-		//printf("(%f, %f at %f\n", output[0], output[1], t);
-	}
+	// float x = controllPoint.getArray()[0];
+	// float y = controllPoint.getArray()[1];
+	// glm::vec2 P0 = glm::vec2(x, y);
+	// x = controllPoint.getArray()[2];
+	// y = controllPoint.getArray()[3];
+	// glm::vec2 P1 = glm::vec2(x, y);
+	// x = controllPoint.getArray()[4];
+	// y = controllPoint.getArray()[5];
+	// glm::vec2 P2 = glm::vec2(x, y);
+	// x = controllPoint.getArray()[6];
+	// y = controllPoint.getArray()[7];
+	// glm::vec2 P3 = glm::vec2(x, y);
+	// float step = 1.0f / GRAN;
+	// for (int i = 0; i <= GRAN; ++i) {
+	// 	float t = step * i;
+	// 	glm::vec2 t0 = P0 * float(pow((1-t), 3));
+	// 	glm::vec2 t1 = P1 * float(pow((1-t), 2) * t);
+	// 	glm::vec2 t2 = P2 * float((1-t) * pow((t), 2));
+	// 	glm::vec2 t3 = P3 * float(pow(t, 3));
+	// 	glm::vec2 output = t0 + t1 + t2 + t3;
+	// 	g_vertex_buffer_data[	// float x = controllPoint.getArray()[0];
+	// float y = controllPoint.getArray()[1];
+	// glm::vec2 P0 = glm::vec2(x, y);
+	// x = controllPoint.getArray()[2];
+	// y = controllPoint.getArray()[3];
+	// glm::vec2 P1 = glm::vec2(x, y);
+	// x = controllPoint.getArray()[4];
+	// y = controllPoint.getArray()[5];
+	// glm::vec2 P2 = glm::vec2(x, y);
+	// x = controllPoint.getArray()[6];
+	// y = controllPoint.getArray()[7];
+	// glm::vec2 P3 = glm::vec2(x, y);
+	// float step = 1.0f / GRAN;
+	// for (int i = 0; i <= GRAN; ++i) {
+	// 	float t = step * i;
+	// 	glm::vec2 t0 = P0 * float(pow((1-t), 3));
+	// 	glm::vec2 t1 = P1 * float(pow((1-t), 2) * t);
+	// 	glm::vec2 t2 = P2 * float((1-t) * pow((t), 2));
+	// 	glm::vec2 t3 = P3 * float(pow(t, 3));
+	// 	glm::vec2 output = t0 + t1 + t2 + t3;
+	// 	g_vertex_buffer_data[i*2] = output[0];
+	// 	g_vertex_buffer_data[i*2 + 1] = output[1];
+	// 	//printf("(%f, %f at %f\n", output[0], output[1], t);
+	// }i*2] = output[0];
+	// 	g_vertex_buffer_data[i*2 + 1] = output[1];
+	// 	//printf("(%f, %f at %f\n", output[0], output[1], t);
+	// }
 }
+class BesselCurve;
+ControllPoint* golbal_controll_pointer;
+BesselCurve* global_bessel_curve;
+class BesselCurve {
+public:
+	BesselCurve(int programID) : programID(programID){
+		glGenVertexArrays(1, &VOA);
+		glGenBuffers(1, &vertexbuffer);
+		glGenBuffers(1, &colorbuffer);
+
+		glBindVertexArray(VOA);
+		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+		glBufferData(
+			GL_ARRAY_BUFFER,
+			sizeof(g_color_data),
+			g_color_data,
+			GL_STATIC_DRAW
+		);
+	}
+	void update() {
+		glBindVertexArray(VOA);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glBufferData(
+			GL_ARRAY_BUFFER,
+			sizeof(g_vertex_data),
+			g_vertex_data,
+			GL_STATIC_DRAW
+		);
+
+	}
+	void initAttribute() {
+		glBindVertexArray(VOA);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glVertexAttribPointer(
+			0,
+			2,
+			GL_FLOAT,
+			GL_FALSE,
+			2 * sizeof(GL_FLOAT),
+			(void*) 0
+		);
+		glEnableVertexAttribArray(0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+		glVertexAttribPointer(
+			1,
+			3,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			(void*)0
+		);
+		glEnableVertexAttribArray(1);
+	}
+
+	void draw() {
+		glBindVertexArray(VOA);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		GLint colorLocation = glGetUniformLocation(programID, "oc");
+		glUniform4f(colorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+		glDrawArrays(GL_LINE_STRIP, 0, GRAN + 1);
+	}
+	void calculatePoints(GLfloat* controllPoint) {
+		float x = controllPoint[0];
+		float y = controllPoint[1];
+		glm::vec2 P0 = glm::vec2(x, y);
+		x = controllPoint[2];
+		y = controllPoint[3];
+		glm::vec2 P1 = glm::vec2(x, y);
+		x = controllPoint[4];
+		y = controllPoint[5];
+		glm::vec2 P2 = glm::vec2(x, y);
+		x = controllPoint[6];
+		y = controllPoint[7];
+		glm::vec2 P3 = glm::vec2(x, y);
+		// printf("p0(%f, %f)\n", P0[0], P0[1]);
+		// printf("p1(%f, %f)\n", P1[0], P1[1]);
+		// printf("p2(%f, %f)\n", P2[0], P2[1]);
+		// printf("p3(%f, %f)\n", P3[0], P3[1]);
+		float step = 1.0f / GRAN;
+		for (int i = 0; i <= GRAN; ++i) {
+			float t = step * i;
+			glm::vec2 t0 = P0 * float(pow((1-t), 3));
+			glm::vec2 t1 = P1 * float(pow((1-t), 2) * t * 3);
+			glm::vec2 t2 = P2 * float((1-t) * pow((t), 2) * 3);
+			glm::vec2 t3 = P3 * float(pow(t, 3));
+			glm::vec2 output = t0 + t1 + t2 + t3;
+			g_vertex_data[2*i] = output[0];
+			g_vertex_data[2*i + 1] = output[1];
+		}
+	}
+
+private:
+	GLuint VOA;
+	GLuint vertexbuffer;
+	GLuint colorbuffer;
+	GLfloat g_vertex_data[2 * (GRAN + 1)];
+	GLfloat g_color_data[3] = {
+		1.0f, 0.0f, 0.0f
+	};
+	int programID;
+};
 int main(void)
 {
+	printf("in main\n");
+	fflush(stdout); 
 	// Initialise GLFW
 	INIT_BESEL();
 	if (!glfwInit())
-	{
+	{	glBindVertexArray(0);
 		fprintf(stderr, "Failed to initialize GLFW\n");
 		getchar();
 		return -1;
@@ -131,6 +254,8 @@ int main(void)
 
 	// copy vertex, index and color into VBO 
 
+//NOTICE: comment start here
+/*
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -177,55 +302,16 @@ int main(void)
 
 	// before unbind VAO, bind element buffer.
 	glBindVertexArray(0);
+	*/
 
-	//NOTICE: for controller
-	GLuint controller_VAO_ID;
-	glGenVertexArrays(1, &controller_VAO_ID);
-	glBindVertexArray(controller_VAO_ID);
 
-	// for vertex
-	GLuint controller_vertex_buffer;
-	glGenBuffers(1, &controller_vertex_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, controller_vertex_buffer);
-	glBufferData(
-		GL_ARRAY_BUFFER,
-		sizeof(g_vertex_controll_point_buffer_data),
-		g_vertex_controll_point_buffer_data,
-		GL_STATIC_DRAW
-	);
-	glVertexAttribPointer(
-		0,
-		2,
-		GL_FLOAT,
-		GL_FALSE,
-		2*sizeof(GL_FLOAT),
-		(void*) 0
-	);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	GLuint controller_color_buffer;
-	glGenBuffers(1, &controller_color_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, controller_color_buffer);
-	glBufferData(
-		GL_ARRAY_BUFFER,
-		sizeof(g_color_buffer_data),
-		g_color_buffer_data,
-		GL_STATIC_DRAW
-	);
-	glVertexAttribPointer(
-		1,
-		3,
-		GL_FLOAT,
-		GL_FALSE,
-		0,
-		(void*)0
-	);
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_VERTEX_ARRAY, 0);
-
-	glBindVertexArray(0);
-	
+	// for controll point
+	ControllPoint controllPoint(programID);
+	controllPoint.initAttribute();
+	BesselCurve besselCurve(programID);
+	besselCurve.initAttribute();
+	golbal_controll_pointer = &controllPoint;
+	global_bessel_curve = &besselCurve;
 	do
 	{
 
@@ -234,10 +320,11 @@ int main(void)
 		glUseProgram(programID);
 
 		// set time to change by time
-		float timeValue = glfwGetTime();
-		float color_value = (sin(timeValue) / 3.0) + 0.5;
-		GLint colorLocation = glGetUniformLocation(programID, "oc");
-		glUniform4f(colorLocation, color_value, color_value, color_value, 1.0f);
+		// float timeValue = glfwGetTime();
+		// float color_value = (sin(timeValue) / 3.0) + 0.5;
+		// GLint colorLocation = glGetUniformLocation(programID, "oc");
+		// glUniform4f(colorLocation, color_value, color_value, color_value, 1.0f);
+		// glUniform4f(colorLocation, color_value, color_value, color_value, 1.0f);
 
 		// calculate mvp
 		// glm::mat4 Projection = glm::perspective(glm::radians(45.0f), float(16)/9, 0.1f, 100.0f);
@@ -259,30 +346,24 @@ int main(void)
 
 		glBindVertexArray(VertexArrayID);
 
+//NOTICE: comment start here
+/*
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 		glBufferData(GL_ARRAY_BUFFER, 
 			sizeof(g_vertex_buffer_data), //NOTICE: mannually calculate size
 			g_vertex_buffer_data, 
 			GL_STATIC_DRAW
 		);
-		if (nth_point == 3) {
-			glDrawArrays(GL_LINE_STRIP, 0, GRAN+1);
+*/
+		glBindVertexArray(0);
+		controllPoint.update();
+		controllPoint.draw();
+
+		if (controllPoint.getNumOfPoint() == 4) {
+			besselCurve.calculatePoints(controllPoint.getArray());
+			besselCurve.update();
+			besselCurve.draw();
 		}
-
-		glBindVertexArray(0);
-
-		glBindVertexArray(controller_VAO_ID);
-		
-		glBindBuffer(GL_ARRAY_BUFFER, controller_vertex_buffer);
-		glBufferData(
-			GL_ARRAY_BUFFER,
-			sizeof(g_vertex_controll_point_buffer_data),
-			g_vertex_controll_point_buffer_data,
-			GL_STATIC_DRAW
-		);
-		glDrawArrays(GL_LINE_STRIP, 0, 4);
-
-		glBindVertexArray(0);
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -295,8 +376,8 @@ int main(void)
 
 	// Close OpenGL window and terminate GLFW
 	//glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &colorbuffer);
-	glDeleteVertexArrays(1, &VertexArrayID);
+//	glDeleteBuffers(1, &colorbuffer);
+	//glDeleteVertexArrays(1, &VertexArrayID);
 	glDeleteProgram(programID);
 	glfwTerminate();
 
@@ -321,8 +402,8 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	if (action == 1) {
 		printf("mouse button change button %d, action %d, mods %d\n", button ,action, mods);
 		printf("position is (%lf, %lf)\n", cursor_x, cursor_y);
-		g_vertex_controll_point_buffer_data[2*nth_point] = cursor_x;
-		g_vertex_controll_point_buffer_data[2*nth_point + 1] = cursor_y;
+		golbal_controll_pointer->addPoint(cursor_x, cursor_y);
+		//controllPoint.addPoint(cursor_x, cursor_y);
 		printf("nth is %d\n", nth_point);
 		nth_point = (nth_point+1) % 4;
 		INIT_BESEL();
