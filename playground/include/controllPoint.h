@@ -74,6 +74,10 @@ public:
 		return g_vertex_controll_point_buffer_data;
 	}
 	int getNumOfPoint() const { return num_of_points; }
+	~ControllPoint() {
+		glDeleteBuffers(1, &vertexbuffer);
+		glDeleteVertexArrays(1, &VOA);
+	}
 private:
 	GLuint VOA;
 	GLuint vertexbuffer;
