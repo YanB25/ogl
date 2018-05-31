@@ -27,10 +27,10 @@ static GLfloat g_vertex_buffer_data[(GRAN+1)*2]= {
 
 static GLfloat g_vertex_controll_point_buffer_data[4 * 2] = {
 	// not init here
-	-0.4f, -0.6f,
-	0.8f, -0.3f,
-	0.0f, -0.7f,
-	0.0f, 0.2f
+	-0.0f, -0.0f,
+	0.0f, -0.0f,
+	0.0f, -0.0f,
+	0.0f, 0.0f
 };
 static const GLfloat g_color_buffer_data[] = {
 	1.0f, 1.0f, 1.0f,
@@ -228,6 +228,7 @@ int main(void)
 	
 	do
 	{
+
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(programID);
@@ -257,11 +258,30 @@ int main(void)
 		// glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]);
 
 		glBindVertexArray(VertexArrayID);
-		glDrawArrays(GL_LINE_STRIP, 0, GRAN+1);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glBufferData(GL_ARRAY_BUFFER, 
+			sizeof(g_vertex_buffer_data), //NOTICE: mannually calculate size
+			g_vertex_buffer_data, 
+			GL_STATIC_DRAW
+		);
+		if (nth_point == 3) {
+			glDrawArrays(GL_LINE_STRIP, 0, GRAN+1);
+		}
+
 		glBindVertexArray(0);
 
 		glBindVertexArray(controller_VAO_ID);
+		
+		glBindBuffer(GL_ARRAY_BUFFER, controller_vertex_buffer);
+		glBufferData(
+			GL_ARRAY_BUFFER,
+			sizeof(g_vertex_controll_point_buffer_data),
+			g_vertex_controll_point_buffer_data,
+			GL_STATIC_DRAW
+		);
 		glDrawArrays(GL_LINE_STRIP, 0, 4);
+
 		glBindVertexArray(0);
 
 		// Swap buffers
@@ -298,10 +318,13 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
-	printf("mouse button change button %d, action %d, mods %d\n", button ,action, mods);
-	printf("position is (%lf, %lf)\n", cursor_x, cursor_y);
-	g_vertex_controll_point_buffer_data[2*nth_point] = cursor_x;
-	g_vertex_controll_point_buffer_data[2*nth_point + 1] = cursor_y;
-	nth_point = (nth_point+1) % 4;
-	INIT_BESEL();
+	if (action == 1) {
+		printf("mouse button change button %d, action %d, mods %d\n", button ,action, mods);
+		printf("position is (%lf, %lf)\n", cursor_x, cursor_y);
+		g_vertex_controll_point_buffer_data[2*nth_point] = cursor_x;
+		g_vertex_controll_point_buffer_data[2*nth_point + 1] = cursor_y;
+		printf("nth is %d\n", nth_point);
+		nth_point = (nth_point+1) % 4;
+		INIT_BESEL();
+	}
 }
