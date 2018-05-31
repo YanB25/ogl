@@ -1,12 +1,12 @@
 default_target: all
-all: star/star.out
-HEADERS = star/include/mymath.hpp common/shader.hpp star/include/config.hpp
-star/star.out: star/star.cpp ${HEADERS}
-	cd star/ && make star.out
-	cd ../
+DIR=BesselCurve
+EXEC=BesselCurve
+all: $(DIR)/$(EXEC).out
+HEADERS = common/shader.hpp $(DIR)/include/config.hpp
+$(DIR)/$(EXEC).out: $(DIR)/$(EXEC).cpp ${HEADERS}
+	@make -C $(DIR)/
 run:
-	cd star/ && ./star.out
-	cd ../
+	@make run -C $(DIR)/
 clean:
 	find . -type f -name "*.o" -delete
 	find . -type f -name "*.out" -delete

@@ -8,7 +8,7 @@ STD_FLAGS=-std=c++11
 OBJ=../common/build/shader.o
 
 SHADER=../common/build/shader.o
-EXEC=star
+EXEC=BesselCurve
 all: ${EXEC}.out
 
 run:
