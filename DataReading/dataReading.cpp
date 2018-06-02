@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
+#include <vector>
 
 #include <GL/glew.h>
 
@@ -14,26 +16,130 @@ GLFWwindow *window;
 #include "include/config.hpp"
 #include "include/controllPoint.h"
 #include "include/BesselCurve.h"
+#include <fstream>
 using namespace glm;
+using std::cout;
+using std::endl;
+using std::vector;
 double cursor_x = 0;
 double cursor_y = 0;
-int nth_point = 0;
 static void glfw_error_callback(int error, const char* description);
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod);
 static void cursor_position_callback(GLFWwindow* windowk, double x, double y);
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
-//static GLfloat g_vertex_buffer_data[(GRAN+1)*2]= {
-	// not init here
-//};
+const char* filename = "data/cow.obj";
 
-class BesselCurve;
-ControllPoint* golbal_controll_pointer;
-BesselCurve* global_bessel_curve;
+class Drawer {
+public:
+	Drawer(int programID) : programID(programID) {
+		readfile();
+		glGenVertexArrays(1, &VAO);
+		glBindVertexArray(VAO);
+		glGenBuffers(1, &vertexbufferID);
+		// glGenBuffers(1, &colorbufferID);
+		glGenBuffers(1, &indexbufferID);
+		printf("ok here\n");
+		fflush(stdout);
+	}
+	void update() {
+		glBindVertexArray(VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferID);
+		glBufferData(
+			GL_ARRAY_BUFFER,
+			sizeof(GL_FLOAT) * vertexes.size(),
+			vertexes.data(),
+			GL_STATIC_DRAW
+		);
+		printf("move size is %lu\n", sizeof(GL_FLOAT) * vertexes.size());
+		// glBindBuffer(GL_ARRAY_BUFFER, colorbufferID);
+		// glBufferData(
+		// 	GL_ARRAY_BUFFER,
+		// 	sizeof(color_data),
+		// 	color_data,
+		// 	GL_STATIC_DRAW
+		// );
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbufferID);
+		glBufferData(
+			GL_ELEMENT_ARRAY_BUFFER,
+			sizeof(GL_UNSIGNED_INT) * indexes.size(),
+			indexes.data(),
+			GL_STATIC_DRAW
+		);
+	}
+	void initAttribute() {
+		glBindVertexArray(VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferID);
+		glVertexAttribPointer(
+			0,
+			3,
+			GL_FLOAT,
+			GL_FALSE,
+			sizeof(GL_FLOAT) * 3,
+			(void*) 0
+		);
+		printf("size is %lu\n", sizeof(GL_FLOAT)*3);
+		glEnableVertexAttribArray(0);
+		// glBindBuffer(GL_ARRAY_BUFFER, colorbufferID);
+		// glVertexAttribPointer(
+		// 	1,
+		// 	3,
+		// 	GL_FLOAT,
+		// 	GL_FALSE,
+		// 	0, // use first item forever
+		// 	(void*) 0
+		// );
+		// glEnableVertexAttribArray(1);
+	}
+	void draw() {
+		fflush(stdout);
+		glBindVertexArray(VAO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferID);
+		GLint colorID = glGetAttribLocation(programID, "oc");
+		glUniform4f(colorID, 1.0f, 1.0f, 1.0f, 1.0f);
+		//glDrawElements(GL_TRIANGLES, indexes.size(), GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 120);
+	}
+	void show() {
+		for (int i = 0; i < 1000; ++i) {
+			printf("%lf\n", vertexes.data()[i]);
+		}
+	}
+private:
+	void readfile() {
+		std::ifstream fin(filename);
+		std::string line;
+		while (std::getline(fin, line)) {
+			if (line[0] == 'v') {
+				float x, y, z;
+				sscanf(line.c_str(), "%*c %f %f %f", &x, &y, &z);
+				vertexes.push_back(x);
+				vertexes.push_back(y);
+				vertexes.push_back(z);
+			} else {
+				int one, two, three;
+				sscanf(line.c_str(), "%*c %d %d %d", &one, &two, &three);
+				indexes.push_back(one);
+				indexes.push_back(two);
+				indexes.push_back(three);
+			}
+		}
+	}
+	int programID;
+	vector<GLfloat> vertexes;
+	vector<GLuint> indexes;
+	GLuint VAO;
+	GLuint vertexbufferID;
+	GLuint colorbufferID;
+	GLuint indexbufferID;
+	GLfloat color_data[3] = {
+		1.0f, 1.0f, 1.0f
+	};
+};
+
 int main(void)
 {
-	printf("in main\n");
-	fflush(stdout); 
 	// Initialise GLFW
 	if (!glfwInit())
 	{	glBindVertexArray(0);
@@ -90,17 +196,10 @@ int main(void)
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
 
-	// init VAO
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-
-	// for controll point
-	ControllPoint controllPoint(programID);
-	controllPoint.initAttribute();
-	BesselCurve besselCurve(programID);
-	besselCurve.initAttribute();
-	golbal_controll_pointer = &controllPoint;
-	global_bessel_curve = &besselCurve;
+	Drawer drawer(programID);
+	drawer.update();
+	drawer.initAttribute();
+	//drawer.show();
 
 	do
 	{
@@ -109,17 +208,10 @@ int main(void)
 
 		glUseProgram(programID);
 
-		glBindVertexArray(VertexArrayID);
 
-		glBindVertexArray(0);
-		controllPoint.update();
-		controllPoint.draw();
-
-		if (controllPoint.getNumOfPoint() == 4) {
-			besselCurve.calculatePoints(controllPoint.getArray());
-			besselCurve.update();
-			besselCurve.draw();
-		}
+		// TODO:continue here
+		drawer.update();
+		drawer.draw();
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -155,9 +247,5 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	if (action == 1) {
 		printf("mouse button change button %d, action %d, mods %d\n", button ,action, mods);
 		printf("position is (%lf, %lf)\n", cursor_x, cursor_y);
-		golbal_controll_pointer->addPoint(cursor_x, cursor_y);
-		//controllPoint.addPoint(cursor_x, cursor_y);
-		printf("nth is %d\n", nth_point);
-		nth_point = (nth_point+1) % 4;
 	}
 }
