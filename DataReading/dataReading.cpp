@@ -98,8 +98,7 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferID);
 		GLint colorID = glGetAttribLocation(programID, "oc");
 		glUniform4f(colorID, 1.0f, 1.0f, 1.0f, 1.0f);
-		//glDrawElements(GL_TRIANGLES, indexes.size(), GL_UNSIGNED_INT, 0);
-		glDrawArrays(GL_TRIANGLES, 0, 120);
+		glDrawElements(GL_TRIANGLES, indexes.size(), GL_UNSIGNED_INT, 0);
 	}
 	void show() {
 		for (int i = 0; i < 1000; ++i) {
