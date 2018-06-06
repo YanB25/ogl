@@ -11,7 +11,7 @@ SHADER=../common/build/shader.o
 EXEC=BesselCurve
 all: ${EXEC}.out
 
-run:
+run_bessel:
 	./${EXEC}.out
 
 ${EXEC}.o: ${EXEC}.cpp include/config.hpp include/controllPoint.h

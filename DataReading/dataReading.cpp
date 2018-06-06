@@ -84,8 +84,7 @@ public:
 			0,
 			3,
 			GL_FLOAT,
-			GL_FALSE, //NOTICE: here change!!
-			//GL_TRUE,
+			GL_FALSE,
 			sizeof(GL_FLOAT) * 3,
 			(void*) 0
 		);
