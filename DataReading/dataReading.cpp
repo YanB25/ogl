@@ -41,6 +41,18 @@ public:
 		glGenBuffers(1, &indexbufferID);
 		printf("ok here\n");
 		fflush(stdout);
+
+		// calculate mvp
+		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), float(16)/9, 0.1f, 100.0f);
+		glm::mat4 View = glm::lookAt(
+			glm::vec3(1, 1, 1),
+			glm::vec3(0, 0, 0),
+			glm::vec3(0, 1, 0)
+		);
+		glm::mat4 Identity = glm::mat4(1.0f);
+		glm::mat4 Model = Identity;
+		mvp = Projection * View * Model;
+
 	}
 	void update() {
 		glBindVertexArray(VAO);
@@ -52,13 +64,7 @@ public:
 			GL_STATIC_DRAW
 		);
 		printf("move size is %lu\n", sizeof(GL_FLOAT) * vertexes.size());
-		// glBindBuffer(GL_ARRAY_BUFFER, colorbufferID);
-		// glBufferData(
-		// 	GL_ARRAY_BUFFER,
-		// 	sizeof(color_data),
-		// 	color_data,
-		// 	GL_STATIC_DRAW
-		// );
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbufferID);
 		glBufferData(
 			GL_ELEMENT_ARRAY_BUFFER,
@@ -78,26 +84,19 @@ public:
 			sizeof(GL_FLOAT) * 3,
 			(void*) 0
 		);
-		printf("size is %lu\n", sizeof(GL_FLOAT)*3);
+		//printf("size is %lu\n", sizeof(GL_FLOAT)*3);
 		glEnableVertexAttribArray(0);
-		// glBindBuffer(GL_ARRAY_BUFFER, colorbufferID);
-		// glVertexAttribPointer(
-		// 	1,
-		// 	3,
-		// 	GL_FLOAT,
-		// 	GL_FALSE,
-		// 	0, // use first item forever
-		// 	(void*) 0
-		// );
-		// glEnableVertexAttribArray(1);
 	}
 	void draw() {
 		fflush(stdout);
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferID);
-		GLint colorID = glGetAttribLocation(programID, "oc");
-		glUniform4f(colorID, 1.0f, 1.0f, 1.0f, 1.0f);
+		//GLint colorID = glGetAttribLocation(programID, "oc");
+		//glUniform4f(colorID, 1.0f, 1.0f, 1.0f, 1.0f);
+		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+		GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
+		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]);
 		glDrawElements(GL_TRIANGLES, indexes.size(), GL_UNSIGNED_INT, 0);
 	}
 	void show() {
@@ -109,6 +108,10 @@ private:
 	void readfile() {
 		std::ifstream fin(filename);
 		std::string line;
+		// count from base 1
+		vertexes.push_back(0);
+		vertexes.push_back(0);
+		vertexes.push_back(0);
 		while (std::getline(fin, line)) {
 			if (line[0] == 'v') {
 				float x, y, z;
@@ -135,6 +138,7 @@ private:
 	GLfloat color_data[3] = {
 		1.0f, 1.0f, 1.0f
 	};
+	glm::mat4 mvp;
 };
 
 int main(void)
@@ -209,7 +213,6 @@ int main(void)
 
 
 		// TODO:continue here
-		drawer.update();
 		drawer.draw();
 
 		// Swap buffers
