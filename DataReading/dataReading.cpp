@@ -28,13 +28,18 @@ static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action
 static void cursor_position_callback(GLFWwindow* windowk, double x, double y);
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
-const char* filename_obj = "data/cow.obj";
-const char* filename_ply = "data/cactus.ply";
+#if defined(OBJ)
+const char* filename = "data/cow.obj";
+#elif defined(PLY)
+const char* filename = "data/cactus.ply";
+#else
+const char* filename = "data/Armadillo.off";
+#endif
 
 class Drawer {
 public:
 	Drawer(int programID) : programID(programID) {
-		readfile_ply();
+		readfile();
 		cout << indexes.size() << endl;
 		cout << vertexes.size() << endl;
 		glGenVertexArrays(1, &VAO);
@@ -48,7 +53,11 @@ public:
 		// calculate mvp
 		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), float(16)/9, 0.1f, 100.0f);
 		glm::mat4 View = glm::lookAt(
+			#ifndef OFF
 			glm::vec3(1, 1, 1),
+			#else
+			glm::vec3(100, 100, 100),
+			#endif
 			glm::vec3(0, 0, 0),
 			glm::vec3(0, 1, 0)
 		);
@@ -83,7 +92,8 @@ public:
 			0,
 			3,
 			GL_FLOAT,
-			GL_FALSE,
+			GL_FALSE, //NOTICE: here change!!
+			//GL_TRUE,
 			sizeof(GL_FLOAT) * 3,
 			(void*) 0
 		);
@@ -108,8 +118,9 @@ public:
 		}
 	}
 private:
-	void readfile_obj() {
-		std::ifstream fin(filename_obj);
+	#if defined(OBJ)
+	void readfile() {
+		std::ifstream fin(filename);
 		std::string line;
 		// count from base 1
 		vertexes.push_back(0);
@@ -131,8 +142,9 @@ private:
 			}
 		}
 	}
-	void readfile_ply() {
-		std::ifstream fin(filename_ply);
+	#elif defined(PLY)
+	void readfile() {
+		std::ifstream fin(filename);
 		std::string line;
 		//vertexes.push_back(0);
 		//vertexes.push_back(0);
@@ -163,6 +175,34 @@ private:
 			}
 		}
 	}
+	#else 
+	void readfile() {
+		std::ifstream fin(filename);
+		std::string line;
+		int index = 0;
+		getline(fin ,line); // get off
+		getline(fin, line);
+		int num_of_vertex, num_of_face;
+		sscanf(line.c_str(), "%d %d %*d", &num_of_vertex, &num_of_face);
+		for (int i = 0; i < num_of_vertex; ++i) {
+			getline(fin, line);
+			float x, y, z;
+			sscanf(line.c_str(), "%f %f %f", &x, &y, &z);
+			vertexes.push_back(x);
+			vertexes.push_back(y);
+			vertexes.push_back(z);
+		}
+		for (int i = 0; i < num_of_face; ++i) {
+			getline(fin, line);
+			int one, two, three;
+			sscanf(line.c_str(), "%*d %d %d %d", &one, &two, &three);
+			indexes.push_back(one);
+			indexes.push_back(two);
+			indexes.push_back(three);
+		}
+
+	}
+	#endif
 	int programID;
 	vector<GLfloat> vertexes;
 	vector<GLuint> indexes;
