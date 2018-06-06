@@ -28,12 +28,15 @@ static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action
 static void cursor_position_callback(GLFWwindow* windowk, double x, double y);
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
-const char* filename = "data/cow.obj";
+const char* filename_obj = "data/cow.obj";
+const char* filename_ply = "data/cactus.ply";
 
 class Drawer {
 public:
 	Drawer(int programID) : programID(programID) {
-		readfile();
+		readfile_ply();
+		cout << indexes.size() << endl;
+		cout << vertexes.size() << endl;
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
 		glGenBuffers(1, &vertexbufferID);
@@ -105,8 +108,8 @@ public:
 		}
 	}
 private:
-	void readfile() {
-		std::ifstream fin(filename);
+	void readfile_obj() {
+		std::ifstream fin(filename_obj);
 		std::string line;
 		// count from base 1
 		vertexes.push_back(0);
@@ -125,6 +128,38 @@ private:
 				indexes.push_back(one);
 				indexes.push_back(two);
 				indexes.push_back(three);
+			}
+		}
+	}
+	void readfile_ply() {
+		std::ifstream fin(filename_ply);
+		std::string line;
+		//vertexes.push_back(0);
+		//vertexes.push_back(0);
+		//vertexes.push_back(0);
+		bool start = false;
+		while (std::getline(fin, line)) {
+			if (!start) {
+				if (line != "end_header") {
+					continue;
+				} else {
+					start = true;
+				}
+			} else {
+
+				if (line[0] != '3') {
+					float x, y, z;
+					sscanf(line.c_str(), "%f %f %f", &x, &y, &z);
+					vertexes.push_back(x);
+					vertexes.push_back(y);
+					vertexes.push_back(z);
+				} else {
+					int one, two, three;
+					sscanf(line.c_str(), "%*d %d %d %d", &one, &two, &three);
+					indexes.push_back(one);
+					indexes.push_back(two);
+					indexes.push_back(three);
+				}
 			}
 		}
 	}
