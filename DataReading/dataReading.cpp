@@ -27,6 +27,12 @@ static void glfw_error_callback(int error, const char* description);
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod);
 static void cursor_position_callback(GLFWwindow* windowk, double x, double y);
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+float delta_x = 0;
+float delta_y = 0;
+float delta_z = 0;
+
+int Mod = 1;
+
 
 #if defined(OBJ)
 const char* filename = "data/cow.obj";
@@ -50,20 +56,6 @@ public:
 		printf("ok here\n");
 		fflush(stdout);
 
-		// calculate mvp
-		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), float(16)/9, 0.1f, 100.0f);
-		glm::mat4 View = glm::lookAt(
-			#ifndef OFF
-			glm::vec3(1, 1, 1),
-			#else
-			glm::vec3(100, 100, 100),
-			#endif
-			glm::vec3(0, 0, 0),
-			glm::vec3(0, 1, 0)
-		);
-		glm::mat4 Identity = glm::mat4(1.0f);
-		glm::mat4 Model = Identity;
-		mvp = Projection * View * Model;
 
 	}
 	void update() {
@@ -101,16 +93,55 @@ public:
 		glEnableVertexAttribArray(0);
 	}
 	void draw() {
+		// calculate mvp
+		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), float(16)/9, 0.1f, 100.0f);
+		glm::mat4 View = glm::lookAt(
+			#ifndef OFF
+			glm::vec3(1 + delta_x, 1 + delta_y, 0 + delta_z),
+			#else
+			glm::vec3(1 + delta_x, 0 + delta_y, 3 + delta_z),
+			#endif
+			glm::vec3(0, 0, 0),
+			glm::vec3(0, 1, 0)
+		);
+		glm::mat4 Identity = glm::mat4(1.0f);
+		glm::mat4 Model = Identity;
+		mvp = Projection * View * Model;
+
 		fflush(stdout);
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferID);
 		//GLint colorID = glGetAttribLocation(programID, "oc");
 		//glUniform4f(colorID, 1.0f, 1.0f, 1.0f, 1.0f);
-		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-		GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
-		glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]);
-		glDrawElements(GL_TRIANGLES, indexes.size(), GL_UNSIGNED_INT, 0);
+		if (Mod == 0) {
+			glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+			GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
+			glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]);
+
+			GLuint color_pos = glGetUniformLocation(programID, "oc");
+			glUniform4f(color_pos, 1.0f, 1.0f, 1.0f, 1.0f);
+			glDrawElements(GL_TRIANGLES, indexes.size(), GL_UNSIGNED_INT, 0);
+		} else if (Mod == 1){
+			glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+			GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
+			glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]);
+
+			GLuint color_pos = glGetUniformLocation(programID, "oc");
+			glUniform4f(color_pos, 1.0f, 1.0f, 1.0f, 1.0f);
+			glDrawElements(GL_TRIANGLES, indexes.size(), GL_UNSIGNED_INT, 0);
+		} else {
+			GLuint MVP_ID = glGetUniformLocation(programID, "MVP");
+			glUniformMatrix4fv(MVP_ID, 1, GL_FALSE, &mvp[0][0]);
+
+			GLuint color_pos = glGetUniformLocation(programID, "oc");
+			glUniform4f(color_pos, 1.0f, 1.0f, 1.0f, 1.0f);
+			glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+			glDrawElements(GL_TRIANGLES, indexes.size(), GL_UNSIGNED_INT, 0);
+			glUniform4f(color_pos, 1.0f, 0.0f, 0.0f, 1.0f);
+			glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+			glDrawElements(GL_TRIANGLES, indexes.size(), GL_UNSIGNED_INT, 0);
+		}
 	}
 	void show() {
 		for (int i = 0; i < 1000; ++i) {
@@ -188,9 +219,9 @@ private:
 			getline(fin, line);
 			float x, y, z;
 			sscanf(line.c_str(), "%f %f %f", &x, &y, &z);
-			vertexes.push_back(x);
-			vertexes.push_back(y);
-			vertexes.push_back(z);
+			vertexes.push_back(x/100);
+			vertexes.push_back(y/100);
+			vertexes.push_back(z/100);
 		}
 		for (int i = 0; i < num_of_face; ++i) {
 			getline(fin, line);
@@ -313,6 +344,29 @@ static void glfw_error_callback(int error, const char* description) {
 
 static void key_call_back(GLFWwindow* windowk, int key, int scanCode, int action, int mod) {
 	printf("key callback, key %d, scancode %d, action %d, mod %d \n", key, scanCode, action, mod);
+	if (action == 0 || action == 2) {
+		if (key == 87) {
+			delta_z -=0.1;
+		} else if (key == 83) {
+			delta_z += 0.1;
+		} else if (key == 65) {
+			delta_x -= 0.1;
+		} else if (key == 68) {
+			delta_x += 0.1;
+		} else if (key == 74) {
+			delta_y -= 0.1;
+		} else if (key == 75) {
+			delta_y += 0.1;
+		}
+
+		if (key == 49) {
+			Mod = 0;
+		} else if (key == 50) {
+			Mod = 1;
+		} else if (key == 51) {
+			Mod = 2;
+		}
+	}
 	//printf("key pressed\n");
 }
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
