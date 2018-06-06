@@ -14,8 +14,6 @@ GLFWwindow *window;
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "include/config.hpp"
-#include "include/controllPoint.h"
-#include "include/BesselCurve.h"
 #include <fstream>
 using namespace glm;
 using std::cout;

@@ -21,27 +21,23 @@ run_off:
 run_ply:
 	./${EXEC_PLY}.out
 
-${EXEC_OBJ}.o: ${EXEC}.cpp include/config.hpp include/controllPoint.h
+${EXEC_OBJ}.o: ${EXEC}.cpp 
 	g++ -c $< -I ${ROOT} ${LINK} $(STD_FLAGS) -D OBJ -o $@
 ${EXEC_OBJ}.out: ${EXEC_OBJ}.o ../common/build/shader.o 
 	g++ ${CC_FLAGS} -o $@ $^ -I {ROOT} ${LINK} ${GLFW_LINK} $(STD_FLAGS)
 
-${EXEC_PLY}.o: ${EXEC}.cpp include/config.hpp include/controllPoint.h
+${EXEC_PLY}.o: ${EXEC}.cpp 
 	g++ -c $< -I ${ROOT} ${LINK} $(STD_FLAGS) -D PLY -o $@
 ${EXEC_PLY}.out: ${EXEC_PLY}.o ../common/build/shader.o 
 	g++ ${CC_FLAGS} -o $@ $^ -I {ROOT} ${LINK} ${GLFW_LINK} $(STD_FLAGS)
 
-${EXEC_OFF}.o: ${EXEC}.cpp include/config.hpp include/controllPoint.h
+${EXEC_OFF}.o: ${EXEC}.cpp 
 	g++ -c $< -I ${ROOT} ${LINK} $(STD_FLAGS) -D OFF -o $@
 ${EXEC_OFF}.out: ${EXEC_OFF}.o ../common/build/shader.o 
 	g++ ${CC_FLAGS} -o $@ $^ -I {ROOT} ${LINK} ${GLFW_LINK} $(STD_FLAGS)
 
 ${SHADER}: ../common/shader.cpp ../common/shader.hpp
-	cd ../common/ && make build/shader.o
-	cd ../star/
-include/mymath.o: include/mymath.cpp include/config.hpp include/mymath.hpp
-	cd include/ && make mymath.o
-	cd ../
+	make -C ../common/ build.shader.o
 clean:
 	find . -type f -name "*.o" -delete
 	find . -type f -name "*.gch" -delete
