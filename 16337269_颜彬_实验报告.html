@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>16337269_颜彬_实验报告</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////home/yb/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.3.5/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+.markdown-preview.markdown-preview body {
+  font-family: Courier, Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px;
+}
+.markdown-preview.markdown-preview body > *:first-child {
+  margin-top: 0 !important;
+}
+.markdown-preview.markdown-preview body > *:last-child {
+  margin-bottom: 0 !important;
+}
+.markdown-preview.markdown-preview a {
+  color: #4183C4;
+}
+.markdown-preview.markdown-preview a.absent {
+  color: #cc0000;
+}
+.markdown-preview.markdown-preview a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+.markdown-preview.markdown-preview h1,
+.markdown-preview.markdown-preview h2,
+.markdown-preview.markdown-preview h3,
+.markdown-preview.markdown-preview h4,
+.markdown-preview.markdown-preview h5,
+.markdown-preview.markdown-preview h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative;
+}
+.markdown-preview.markdown-preview h1:hover a.anchor,
+.markdown-preview.markdown-preview h2:hover a.anchor,
+.markdown-preview.markdown-preview h3:hover a.anchor,
+.markdown-preview.markdown-preview h4:hover a.anchor,
+.markdown-preview.markdown-preview h5:hover a.anchor,
+.markdown-preview.markdown-preview h6:hover a.anchor {
+  background: url("../../images/modules/styleguide/para.png") no-repeat 10px center;
+  text-decoration: none;
+}
+.markdown-preview.markdown-preview h1 tt,
+.markdown-preview.markdown-preview h1 code {
+  font-size: inherit;
+}
+.markdown-preview.markdown-preview h2 tt,
+.markdown-preview.markdown-preview h2 code {
+  font-size: inherit;
+}
+.markdown-preview.markdown-preview h3 tt,
+.markdown-preview.markdown-preview h3 code {
+  font-size: inherit;
+}
+.markdown-preview.markdown-preview h4 tt,
+.markdown-preview.markdown-preview h4 code {
+  font-size: inherit;
+}
+.markdown-preview.markdown-preview h5 tt,
+.markdown-preview.markdown-preview h5 code {
+  font-size: inherit;
+}
+.markdown-preview.markdown-preview h6 tt,
+.markdown-preview.markdown-preview h6 code {
+  font-size: inherit;
+}
+.markdown-preview.markdown-preview h1 {
+  font-size: 30px;
+  color: black;
+}
+.markdown-preview.markdown-preview h2 {
+  font-size: 24px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #cccccc;
+  color: black;
+}
+.markdown-preview.markdown-preview h3 {
+  font-size: 18px;
+}
+.markdown-preview.markdown-preview h4 {
+  font-size: 16px;
+}
+.markdown-preview.markdown-preview h5 {
+  font-size: 14px;
+}
+.markdown-preview.markdown-preview h6 {
+  color: #777777;
+  font-size: 14px;
+}
+.markdown-preview.markdown-preview p,
+.markdown-preview.markdown-preview blockquote,
+.markdown-preview.markdown-preview ul,
+.markdown-preview.markdown-preview ol,
+.markdown-preview.markdown-preview dl,
+.markdown-preview.markdown-preview li,
+.markdown-preview.markdown-preview table,
+.markdown-preview.markdown-preview pre {
+  margin: 15px 0;
+}
+.markdown-preview.markdown-preview hr {
+  background: transparent url("../../images/modules/pulls/dirty-shade.png") repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+.markdown-preview.markdown-preview body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+.markdown-preview.markdown-preview body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+.markdown-preview.markdown-preview body > h1:first-child + h2 {
+  margin-top: 0;
+  padding-top: 0;
+}
+.markdown-preview.markdown-preview body > h3:first-child,
+.markdown-preview.markdown-preview body > h4:first-child,
+.markdown-preview.markdown-preview body > h5:first-child,
+.markdown-preview.markdown-preview body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+.markdown-preview.markdown-preview a:first-child h1,
+.markdown-preview.markdown-preview a:first-child h2,
+.markdown-preview.markdown-preview a:first-child h3,
+.markdown-preview.markdown-preview a:first-child h4,
+.markdown-preview.markdown-preview a:first-child h5,
+.markdown-preview.markdown-preview a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+.markdown-preview.markdown-preview h1 p,
+.markdown-preview.markdown-preview h2 p,
+.markdown-preview.markdown-preview h3 p,
+.markdown-preview.markdown-preview h4 p,
+.markdown-preview.markdown-preview h5 p,
+.markdown-preview.markdown-preview h6 p {
+  margin-top: 0;
+}
+.markdown-preview.markdown-preview li p.first {
+  display: inline-block;
+}
+.markdown-preview.markdown-preview ul,
+.markdown-preview.markdown-preview ol {
+  padding-left: 30px;
+}
+.markdown-preview.markdown-preview ul :first-child,
+.markdown-preview.markdown-preview ol :first-child {
+  margin-top: 0;
+}
+.markdown-preview.markdown-preview ul :last-child,
+.markdown-preview.markdown-preview ol :last-child {
+  margin-bottom: 0;
+}
+.markdown-preview.markdown-preview dl {
+  padding: 0;
+}
+.markdown-preview.markdown-preview dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+.markdown-preview.markdown-preview dl dt:first-child {
+  padding: 0;
+}
+.markdown-preview.markdown-preview dl dt > :first-child {
+  margin-top: 0;
+}
+.markdown-preview.markdown-preview dl dt > :last-child {
+  margin-bottom: 0;
+}
+.markdown-preview.markdown-preview dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+.markdown-preview.markdown-preview dl dd > :first-child {
+  margin-top: 0;
+}
+.markdown-preview.markdown-preview dl dd > :last-child {
+  margin-bottom: 0;
+}
+.markdown-preview.markdown-preview blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777;
+}
+.markdown-preview.markdown-preview blockquote > :first-child {
+  margin-top: 0;
+}
+.markdown-preview.markdown-preview blockquote > :last-child {
+  margin-bottom: 0;
+}
+.markdown-preview.markdown-preview table {
+  padding: 0;
+}
+.markdown-preview.markdown-preview table tr {
+  border-top: 1px solid #cccccc;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+}
+.markdown-preview.markdown-preview table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+.markdown-preview.markdown-preview table tr th {
+  font-weight: bold;
+  border: 1px solid #cccccc;
+  text-align: left;
+  margin: 0;
+  padding: 6px 13px;
+}
+.markdown-preview.markdown-preview table tr td {
+  border: 1px solid #cccccc;
+  text-align: left;
+  margin: 0;
+  padding: 6px 13px;
+}
+.markdown-preview.markdown-preview table tr th :first-child,
+.markdown-preview.markdown-preview table tr td :first-child {
+  margin-top: 0;
+}
+.markdown-preview.markdown-preview table tr th :last-child,
+.markdown-preview.markdown-preview table tr td :last-child {
+  margin-bottom: 0;
+}
+.markdown-preview.markdown-preview img {
+  max-width: 100%;
+}
+.markdown-preview.markdown-preview span.frame {
+  display: block;
+  overflow: hidden;
+}
+.markdown-preview.markdown-preview span.frame > span {
+  border: 1px solid #dddddd;
+  display: block;
+  float: left;
+  overflow: hidden;
+  margin: 13px 0 0;
+  padding: 7px;
+  width: auto;
+}
+.markdown-preview.markdown-preview span.frame span img {
+  display: block;
+  float: left;
+}
+.markdown-preview.markdown-preview span.frame span span {
+  clear: both;
+  color: #333333;
+  display: block;
+  padding: 5px 0 0;
+}
+.markdown-preview.markdown-preview span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+.markdown-preview.markdown-preview span.align-center > span {
+  display: block;
+  overflow: hidden;
+  margin: 13px auto 0;
+  text-align: center;
+}
+.markdown-preview.markdown-preview span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+.markdown-preview.markdown-preview span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+.markdown-preview.markdown-preview span.align-right > span {
+  display: block;
+  overflow: hidden;
+  margin: 13px 0 0;
+  text-align: right;
+}
+.markdown-preview.markdown-preview span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+.markdown-preview.markdown-preview span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left;
+}
+.markdown-preview.markdown-preview span.float-left span {
+  margin: 13px 0 0;
+}
+.markdown-preview.markdown-preview span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right;
+}
+.markdown-preview.markdown-preview span.float-right > span {
+  display: block;
+  overflow: hidden;
+  margin: 13px auto 0;
+  text-align: right;
+}
+.markdown-preview.markdown-preview code,
+.markdown-preview.markdown-preview tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+.markdown-preview.markdown-preview pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+.markdown-preview.markdown-preview .highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+.markdown-preview.markdown-preview pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+.markdown-preview.markdown-preview pre code,
+.markdown-preview.markdown-preview pre tt {
+  background-color: transparent;
+  border: none;
+}
+ 
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview   ">
+      <h1 class="mume-header" id="%E5%9B%BE%E5%BD%A2%E5%AD%A6%E9%A1%B9%E7%9B%AE%E6%8A%A5%E5%91%8A">图形学项目报告</h1>
+
+<p>16337269 颜彬</p>
+<h2 class="mume-header" id="%E6%9E%84%E5%BB%BA%E6%96%B9%E6%B3%95">构建方法</h2>
+
+<p>（本项目已包含可执行文件，此步骤可以跳过）</p>
+<pre data-role="codeBlock" data-info="sh" class="language-bash"><span class="token comment"># 在文件夹根目录下</span>
+$ <span class="token function">make</span>
+</pre><h2 class="mume-header" id="%E8%BF%90%E8%A1%8C%E6%96%B9%E6%B3%95">运行方法</h2>
+
+<p>在根目录下</p>
+<pre data-role="codeBlock" data-info="sh" class="language-bash">$ <span class="token function">make</span> run
+</pre><h2 class="mume-header" id="%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C">运行结果</h2>
+
+<p>见视频<code>程序运行视频-2018-06-18_14.36.44.mp4</code></p>
+<h2 class="mume-header" id="%E8%BF%90%E8%A1%8C%E6%88%AA%E5%9B%BE">运行截图</h2>
+
+<p><img src="spot1.png" alt=""><br>
+<img src="spot2.png" alt=""><br>
+<img src="spot3.png" alt=""></p>
+<h2 class="mume-header" id="%E6%8E%A7%E5%88%B6%E6%96%B9%E5%BC%8F">控制方式</h2>
+
+<p>按下<code>W</code>, <code>A</code>, ,<code>S</code>, <code>D</code>, <code>J</code>, <code>K</code>, 可操控摄像机的位置。</p>
+<h2 class="mume-header" id="%E6%96%87%E4%BB%B6%E4%BB%8B%E7%BB%8D">文件介绍</h2>
+
+<h3 class="mume-header" id="%E6%A0%B9%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6%E4%BB%8B%E7%BB%8D">根目录文件介绍</h3>
+
+<pre data-role="codeBlock" data-info="" class="language-"><code>.
+&#x251C;&#x2500;&#x2500; 16337269_&#x989C;&#x5F6C;_&#x5B9E;&#x9A8C;&#x62A5;&#x544A;.md
+&#x251C;&#x2500;&#x2500; common/
+&#x251C;&#x2500;&#x2500; light/
+&#x251C;&#x2500;&#x2500; distrib/
+&#x251C;&#x2500;&#x2500; external/
+&#x251C;&#x2500;&#x2500; .git
+&#x251C;&#x2500;&#x2500; .gitignore
+&#x251C;&#x2500;&#x2500; Makefile
+&#x251C;&#x2500;&#x2500; .vscode
+&#x2514;&#x2500;&#x2500; &#x7A0B;&#x5E8F;&#x8FD0;&#x884C;&#x89C6;&#x9891;-2018-06-18_14.36.44.mp4
+
+5 directories, 4 files
+</code></pre><ul>
+<li>16337269_颜彬_实验报告.pdf<br>
+实验报告</li>
+<li>Makefile<br>
+文件总Makefile</li>
+<li>light/<br>
+存放带有光源的茶壶的文件</li>
+<li>程序运行视频-2018-06-08_11.36.39.mp4<br>
+程序运行的示范视频</li>
+</ul>
+<h2 class="mume-header" id="%E5%AE%9E%E7%8E%B0%E6%80%9D%E8%B7%AF">实现思路</h2>
+
+<h3 class="mume-header" id="%E5%9F%BA%E7%A1%80%E5%85%89%E7%85%A7">基础光照</h3>
+
+<p>本项目的光照基于冯氏光照模型。该模型是一种较为简单的光照模型。</p>
+<p>冯氏光照模型中的光由环境光、漫反射光和镜面反射光三部分组成。</p>
+<ul>
+<li>环境光照(Ambient Lighting)<br>
+即使在黑暗的情况下，世界上通常也仍然有一些光亮（月亮、远处的光），所以物体几乎永远不会是完全黑暗的。为了模拟这个，我们会使用一个环境光照常量，它永远会给物体一些颜色。</li>
+<li>漫反射光照(Diffuse Lighting)<br>
+模拟光源对物体的方向性影响(Directional Impact)。它是冯氏光照模型中视觉上最显著的分量。物体的某一部分越是正对着光源，它就会越亮。</li>
+<li>镜面光照(Specular Lighting)<br>
+模拟有光泽物体上面出现的亮点。镜面光照的颜色相比于物体的颜色会更倾向于光的颜色。</li>
+</ul>
+<h3 class="mume-header" id="%E7%8E%AF%E5%A2%83%E5%85%89">环境光</h3>
+
+<p>环境光是很少量的一种光照。将光的颜色（白色）乘以一个很小的因子，再乘以物体颜色，即产生环境光。</p>
+<pre data-role="codeBlock" data-info="C++" class="language-cpp"><span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">float</span> ambientStrength <span class="token operator">=</span> <span class="token number">0.1</span><span class="token punctuation">;</span>
+    vec3 ambient <span class="token operator">=</span> ambientStrength <span class="token operator">*</span> lightColor<span class="token punctuation">;</span>
+
+    vec3 result <span class="token operator">=</span> ambient <span class="token operator">*</span> objectColor<span class="token punctuation">;</span>
+    FragColor <span class="token operator">=</span> <span class="token function">vec4</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre><h3 class="mume-header" id="%E6%BC%AB%E5%8F%8D%E5%B0%84%E5%85%89">漫反射光</h3>
+
+<p>漫反射光是冯氏光照模型中最显著的一种光照。其基于的原理是，光源与平面的夹角越小，光线越暗，夹角越大，光线越亮。为了刻画光线和平面的夹角，一般使用平面的法线和光线的夹角的余弦值来表示。余弦值越接近1，代表光照越强，越接近0则表示光照越弱。</p>
+<p>obj文件中，一般自带面的法向量，故只需读取文件，并计算夹角即可。</p>
+<p>值得注意的是，法向量一般是模型坐标系中的法向量。但光照的计算往往发生在世界坐标系。故需要对模型坐标系中的法向量做坐标变换，变换到世界坐标系中的法向量。值得注意的是，平移操作对向量是不起作用的。</p>
+<p>如果采用四元组的方式表示向量，则第四维为0，所有的平移操作不会对该向量造成改变。直接采用矩阵运算即可完成法向量的坐标变换。</p>
+<h3 class="mume-header" id="%E9%95%9C%E9%9D%A2%E5%85%89%E7%85%A7">镜面光照</h3>
+
+<p>和漫反射光照一样，镜面光照也是依据光的方向向量和物体的法向量来决定的，但是它也依赖于观察方向，例如玩家是从什么方向看着这个片段的。镜面光照是基于光的反射特性。如果我们想象物体表面像一面镜子一样，那么，无论我们从哪里去看那个表面所反射的光，镜面光照都会达到最大化。</p>
+<p>在计算镜面光照时，先假设发生了镜面反射，算出反射射出的光线的角度。再比较人的视角和射出的光线的角度。若两者越接近，则镜面反射的效果就越强，否则就越弱。</p>
+<h2 class="mume-header" id="%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81">实现代码</h2>
+
+<h3 class="mume-header" id="%E9%A1%B6%E7%82%B9%E7%9D%80%E8%89%B2%E5%99%A8">顶点着色器</h3>
+
+<p>顶点着色器的代码很简单。其输入是每个顶点的坐标和该定点所在平面的法向量的坐标。相关的输入还有MVP矩阵，Model矩阵，View矩阵，光源在世界坐标系中的位置等。</p>
+<p>其通过简单的数学运算，向段着色器输出定点世界坐标系的位置，法向量在摄像机坐标系中的位置，眼睛的方向和光的方向等。</p>
+<pre data-role="codeBlock" data-info="C++" class="language-cpp"><span class="token macro property">#version 330 core</span>
+<span class="token comment">// Input vertex data, different for all executions of this shader.</span>
+<span class="token function">layout</span><span class="token punctuation">(</span>location <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">)</span> in vec3 vertexPosition_modelspace<span class="token punctuation">;</span>
+<span class="token function">layout</span><span class="token punctuation">(</span>location <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span> in vec3 vertexNormal_modelspace<span class="token punctuation">;</span>
+
+<span class="token comment">// Output data ; will be interpolated for each fragment.</span>
+out vec3 Position_worldspace<span class="token punctuation">;</span>
+out vec3 Normal_cameraspace<span class="token punctuation">;</span>
+out vec3 EyeDirection_cameraspace<span class="token punctuation">;</span>
+out vec3 LightDirection_cameraspace<span class="token punctuation">;</span>
+
+<span class="token comment">// Values that stay constant for the whole mesh.</span>
+uniform mat4 MVP<span class="token punctuation">;</span>
+uniform mat4 V<span class="token punctuation">;</span>
+uniform mat4 M<span class="token punctuation">;</span>
+uniform vec3 LightPosition_worldspace<span class="token punctuation">;</span>
+
+<span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+
+	gl_Position <span class="token operator">=</span>  MVP <span class="token operator">*</span> <span class="token function">vec4</span><span class="token punctuation">(</span>vertexPosition_modelspace<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	Position_worldspace <span class="token operator">=</span> 
+		<span class="token punctuation">(</span>M <span class="token operator">*</span> <span class="token function">vec4</span><span class="token punctuation">(</span>vertexPosition_modelspace<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>xyz<span class="token punctuation">;</span>
+	vec3 vertexPosition_cameraspace <span class="token operator">=</span> 
+		<span class="token punctuation">(</span> V <span class="token operator">*</span> M <span class="token operator">*</span> <span class="token function">vec4</span><span class="token punctuation">(</span>vertexPosition_modelspace<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>xyz<span class="token punctuation">;</span>
+	EyeDirection_cameraspace <span class="token operator">=</span> 
+		<span class="token function">vec3</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">-</span> vertexPosition_cameraspace<span class="token punctuation">;</span>
+	vec3 LightPosition_cameraspace <span class="token operator">=</span> 
+		<span class="token punctuation">(</span> V <span class="token operator">*</span> <span class="token function">vec4</span><span class="token punctuation">(</span>LightPosition_worldspace<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>xyz<span class="token punctuation">;</span>
+	LightDirection_cameraspace <span class="token operator">=</span> 
+		LightPosition_cameraspace <span class="token operator">+</span> EyeDirection_cameraspace<span class="token punctuation">;</span>
+	Normal_cameraspace <span class="token operator">=</span> 
+		<span class="token punctuation">(</span> V <span class="token operator">*</span> M <span class="token operator">*</span> <span class="token function">vec4</span><span class="token punctuation">(</span>vertexNormal_modelspace<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>xyz<span class="token punctuation">;</span> 
+<span class="token punctuation">}</span>
+</pre><h3 class="mume-header" id="%E6%AE%B5%E7%9D%80%E8%89%B2%E5%99%A8">段着色器</h3>
+
+<p>端着色器的实现分为三大部分，如上述冯氏模型所述。其分别计算环境光、漫反射光和镜面反射光，将其合并，产生最终的光照效果。</p>
+<p>实现中用到了clamp函数，这是因为计算余弦值时，有可能出现结果为负数的情况。这是由于平面背对光源，法向量与光线形成的夹角不是锐角或直角。clamp将所有大于1的数截断到1，小于0的数截断到0.</p>
+<pre data-role="codeBlock" data-info="C++" class="language-cpp"><span class="token macro property">#version 330 core</span>
+in vec3 Position_worldspace<span class="token punctuation">;</span>
+in vec3 Normal_cameraspace<span class="token punctuation">;</span>
+in vec3 EyeDirection_cameraspace<span class="token punctuation">;</span>
+in vec3 LightDirection_cameraspace<span class="token punctuation">;</span>
+
+out vec3 color<span class="token punctuation">;</span>
+
+uniform mat4 MV<span class="token punctuation">;</span>
+uniform vec3 LightPosition_worldspace<span class="token punctuation">;</span>
+
+<span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+
+	vec3 LightColor <span class="token operator">=</span> <span class="token function">vec3</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">float</span> LightPower <span class="token operator">=</span> <span class="token number">50.0f</span><span class="token punctuation">;</span>
+	vec3 MaterialDiffuseColor <span class="token operator">=</span> <span class="token function">vec3</span><span class="token punctuation">(</span><span class="token number">1.0</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	vec3 MaterialAmbientColor <span class="token operator">=</span> 
+		<span class="token function">vec3</span><span class="token punctuation">(</span><span class="token number">0.1</span><span class="token punctuation">,</span><span class="token number">0.1</span><span class="token punctuation">,</span><span class="token number">0.1</span><span class="token punctuation">)</span> <span class="token operator">*</span> MaterialDiffuseColor<span class="token punctuation">;</span>
+	vec3 MaterialSpecularColor <span class="token operator">=</span> <span class="token function">vec3</span><span class="token punctuation">(</span><span class="token number">0.3</span><span class="token punctuation">,</span><span class="token number">0.3</span><span class="token punctuation">,</span><span class="token number">0.3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">float</span> distance <span class="token operator">=</span> 
+		<span class="token function">length</span><span class="token punctuation">(</span> LightPosition_worldspace <span class="token operator">-</span> Position_worldspace <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	vec3 n <span class="token operator">=</span> <span class="token function">normalize</span><span class="token punctuation">(</span> Normal_cameraspace <span class="token punctuation">)</span><span class="token punctuation">;</span>
+	vec3 l <span class="token operator">=</span> <span class="token function">normalize</span><span class="token punctuation">(</span> LightDirection_cameraspace <span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token comment">// clamped above 0</span>
+	<span class="token comment">//  - light is at the vertical of the triangle -> 1</span>
+	<span class="token comment">//  - light is perpendicular to the triangle -> 0</span>
+	<span class="token comment">//  - light is behind the triangle -> 0</span>
+	<span class="token keyword">float</span> cosTheta <span class="token operator">=</span> <span class="token function">clamp</span><span class="token punctuation">(</span> <span class="token function">dot</span><span class="token punctuation">(</span> n<span class="token punctuation">,</span>l <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+	
+	vec3 E <span class="token operator">=</span> <span class="token function">normalize</span><span class="token punctuation">(</span>EyeDirection_cameraspace<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	vec3 R <span class="token operator">=</span> <span class="token function">reflect</span><span class="token punctuation">(</span><span class="token operator">-</span>l<span class="token punctuation">,</span>n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token comment">// clamped to 0</span>
+	<span class="token comment">//  - Looking into the reflection -> 1</span>
+	<span class="token comment">//  - Looking elsewhere -> &lt; 1</span>
+	<span class="token keyword">float</span> cosAlpha <span class="token operator">=</span> <span class="token function">clamp</span><span class="token punctuation">(</span> <span class="token function">dot</span><span class="token punctuation">(</span> E<span class="token punctuation">,</span>R <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+	
+	color <span class="token operator">=</span> 
+		<span class="token comment">// Ambient : simulates indirect lighting</span>
+		MaterialAmbientColor <span class="token operator">+</span>
+		<span class="token comment">// Diffuse : "color" of the object</span>
+		MaterialDiffuseColor <span class="token operator">*</span> LightColor <span class="token operator">*</span> LightPower <span class="token operator">*</span> cosTheta <span class="token operator">/</span> <span class="token punctuation">(</span>distance<span class="token operator">*</span>distance<span class="token punctuation">)</span> <span class="token operator">+</span>
+		<span class="token comment">// Specular : reflective highlight, like a mirror</span>
+		MaterialSpecularColor <span class="token operator">*</span> LightColor <span class="token operator">*</span> LightPower <span class="token operator">*</span> <span class="token function">pow</span><span class="token punctuation">(</span>cosAlpha<span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span>distance<span class="token operator">*</span>distance<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+</pre>
+      </div>
+      
+      
+    </body>
+    
+    
+    
+    
+    
+    
+    
+  </html>

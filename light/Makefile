@@ -11,7 +11,7 @@ SHADER=../common/build/shader.o
 EXEC_OBJ=dataReading_OBJ
 EXEC_PLY=dataReading_PLY
 EXEC_OFF=dataReading_OFF
-EXEC=dataReading
+EXEC=light
 all: $(EXEC).out
 
 run_obj:
